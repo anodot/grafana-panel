@@ -1,0 +1,103 @@
+/* Styles for any charts */
+.highcharts-background {
+  fill: none;
+}
+
+.anodot-area .highcharts-graph {
+  stroke: none;
+}
+
+.isDark .anodot-area .highcharts-area {
+  fill: rgba(1, 77, 150, 0.75);
+}
+.isDark .highcharts-grid-line,
+.isDark .highcharts-axis-line {
+  stroke: #414446;
+}
+
+.isDark .crosshair-line {
+  stroke: #8895a0;
+}
+
+/*.anodot-line .highcharts-graph {*/
+/*  stroke: #2671ff;*/
+/*  stroke-width: 2px;*/
+/*  z-index: 1;*/
+/*}*/
+
+.anodot-line .other-anomaly {
+  stroke: #224057;
+  stroke-width: 4px;
+  z-index: 5;
+}
+
+.anodot-line .anomaly-part {
+  stroke: #ff8f24 !important;
+  stroke-width: 4px;
+  z-index: 5;
+}
+
+.anodot-chart-tooltip {
+  width: 151px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3d4c59;
+  padding: 3px;
+}
+.isDark .anodot-chart-tooltip {
+  color: #c7d0d9;
+}
+
+.highcharts-tooltip-box {
+  fill: white;
+  padding: 8px 12px 12px;
+  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+}
+
+.isDark .highcharts-tooltip-box {
+  stroke: none;
+  fill: #36393f;
+}
+
+.anodot-chart-tooltip .timestamp {
+  font-size: 12px;
+}
+
+.anodot-chart-tooltip .bage {
+  color: white;
+  text-align: center;
+  display: inline-block;
+  border-radius: 12px;
+  padding: 3px 10px;
+  margin: 10px auto;
+  font-size: 16px;
+}
+
+.bage-wrapper.metrics {
+  text-align: center;
+}
+
+.anodot-chart-tooltip .anomaly-rows span {
+  opacity: 0.7;
+  margin-bottom: 4px
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.green {
+  color: rgb(51, 162, 229);
+  /* color: green;*/
+}
+.centered {
+  text-align: center;
+}
+
+/*.popper__background {*/
+/*  background-color: white !important;*/
+/*}*/
+/*.isDark .popper__background {*/
+/*  background-color: initial !important;*/
+/*}*/

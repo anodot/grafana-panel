@@ -1,0 +1,38 @@
+{
+  "type": "panel",
+  "name": "Anodot",
+  "id": "anodot-panel",
+  "info": {
+    "description": "Anodot Grafana Panel for usage together with anodot-datasource",
+    "author": {
+      "name": "Anodot",
+      "url": "https://anodot.com"
+    },
+    "keywords": ["anodot"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Anodot",
+        "url": "https://anodot.com"
+      }
+    ],
+    "screenshots": [{
+      "name": "Anodot Dashboard",
+      "path": "img/screenshot.png"
+    }],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": "7.0.x",
+    "plugins": [{
+      "id": "anodot-datasource",
+      "name": "anodot-datasource",
+      "type": "datasource",
+      "version": "1.0.0"
+    }]
+  }
+}
