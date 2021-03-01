@@ -5,16 +5,13 @@ import { uniqBy } from 'lodash';
 import { css } from 'emotion';
 import SearchPanel from './Components/SearchPanel';
 import TopologyMapContainer from './Components/TopoChartContainer';
-import TimeSeriesPanel from './Components/TimeSeriesPanel';
 import { convertAnomaliesToEdges, convertServerDataToTopology } from './helpers';
 import { VisOptions } from 'types';
 
 import './topomap.css';
 
 const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie }) => {
-  const [drawId, setDrawId] = useState(0);
-  const [metricsTimeSeriesParams, setMetricsTimeSeriesParams] = useState([]);
-  const [{ drawerContent }, dispatch] = useContext(ReducerContext);
+  const [{}, dispatch] = useContext(ReducerContext);
   const { metrics = [], anomalies = [], query = {}, callId, urlBase, propertiesOptions, events } =
     serie?.anodotPayload || {};
   const { source, destination, context } = query;
@@ -30,7 +27,7 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie }) => {
         { type: 'setEvents', events },
       ],
     });
-  }, [query, urlBase, propertiesOptions]);
+  }, [query, urlBase, propertiesOptions, dispatch, events]);
 
   useEffect(() => {
     /* Convert server data to topology data locally */
@@ -47,61 +44,50 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie }) => {
         ],
       });
     }
-  }, [callId, metrics, anomalies, source, destination]);
+  }, [callId, metrics, anomalies, source, destination, dispatch, context]);
 
-  const resetTopology = useCallback(() => {
-    setDrawId(Math.random());
-    dispatch({ type: 'setSelectedEdge', selectedEdge: null });
-  }, []);
+  const onClickEdge = useCallback(
+    edge => {
+      if (!edge) {
+        dispatch({ type: 'setSelectedEdge', selectedEdge: null });
+        return;
+      }
 
-  // useEffect(() => {
-  //   /* Force Chart to redraw when data is changed */
-  //   resetTopology();
-  // }, [metricsData, anomalyData]);
+      const actions = [{ type: 'setSelectedEdge', selectedEdge: edge }];
+      if (edge.hasAnomaly) {
+        actions.push({ type: 'setOpenTimeLine', value: true });
+        // actions.push({ type: 'setInvestigateAnomalies', value: edge.anomalies })
+      }
+      dispatch({
+        type: 'bulk',
+        actions,
+      });
 
-  const onClickEdge = useCallback(edge => {
-    if (!edge) {
-      dispatch({ type: 'setSelectedEdge', selectedEdge: null });
-      return;
-    }
-
-    const actions = [
-      { type: 'setSelectedEdge', selectedEdge: edge },
-      // { type: 'setIsVisibleTimeSeries', value: true },
-      // { type: 'setDrawerContent', value: 'metric' }, // edge.hasAnomaly ? 'anomaly' : 'metric' },
-    ];
-    if (edge.hasAnomaly) {
-      actions.push({ type: 'setOpenTimeLine', value: true });
-      // actions.push({ type: 'setInvestigateAnomalies', value: edge.anomalies })
-    }
-    dispatch({
-      type: 'bulk',
-      actions,
-    });
-
-    const uniqueRecordsParams = uniqBy(edge.duplicates, d => d.metric + d.from + d.to).map(d => {
-      const from = { key: edge.activeSource, value: JSON.parse(d.from)[edge.activeSource] };
-      const to = { key: edge.activeDest, value: JSON.parse(d.to)[edge.activeDest] };
-      return { metric: d.metric, from, to };
-    });
-    uniqueRecordsParams.id = JSON.stringify(uniqueRecordsParams);
-    // const win = window.open('google.com', '_blank');
-    // win.focus();
-    // setMetricsTimeSeriesParams(uniqueRecordsParams);
-  }, []);
+      const uniqueRecordsParams = uniqBy(edge.duplicates, d => d.metric + d.from + d.to).map(d => {
+        const from = { key: edge.activeSource, value: JSON.parse(d.from)[edge.activeSource] };
+        const to = { key: edge.activeDest, value: JSON.parse(d.to)[edge.activeDest] };
+        return { metric: d.metric, from, to };
+      });
+      uniqueRecordsParams.id = JSON.stringify(uniqueRecordsParams);
+    },
+    [dispatch]
+  );
 
   const getTimeSeries = useCallback(edge => {}, []);
 
-  const onInvestigateClick = useCallback(anomalies => {
-    dispatch({
-      type: 'bulk',
-      actions: [
-        { type: 'setInvestigateAnomalies', value: anomalies },
-        { type: 'setIsVisibleTimeSeries', value: true },
-        { type: 'setDrawerContent', value: 'anomaly' },
-      ],
-    });
-  });
+  const onInvestigateClick = useCallback(
+    anomalies => {
+      dispatch({
+        type: 'bulk',
+        actions: [
+          { type: 'setInvestigateAnomalies', value: anomalies },
+          { type: 'setIsVisibleTimeSeries', value: true },
+          { type: 'setDrawerContent', value: 'anomaly' },
+        ],
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <div
@@ -114,18 +100,16 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie }) => {
         position: relative;
       `}
     >
-      <SearchPanel resetTopology={resetTopology} onInvestigateClick={onInvestigateClick} />
+      <SearchPanel onInvestigateClick={onInvestigateClick} />
       <div
         className={css`
           display: flex;
           flex: 1;
           height: 100%;
         `}
-        key={drawId}
       >
         <TopologyMapContainer width={width} height={height} onClickEdge={onClickEdge} />
       </div>
-      <TimeSeriesPanel isAnomaly={drawerContent === 'anomaly'} metricsParams={metricsTimeSeriesParams} />
     </div>
   );
 };

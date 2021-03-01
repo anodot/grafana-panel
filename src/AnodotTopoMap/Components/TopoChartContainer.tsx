@@ -40,11 +40,14 @@ const ChartContainer = ({ onClickEdge }) => {
   const [showModal, setShowModal] = useState(false);
   const [currentDatasetKey, setDatasetKey] = useState('0');
   const { context = [], source, destination, clusterBy } = searchParams;
-  const setSelectedEdge = useCallback(selectedEdge => dispatch({ type: 'setSelectedEdge', selectedEdge }), []);
-  const setSelectedNode = useCallback(selectedNode => {
-    dispatch({ type: 'setSelectedNode', selectedNode });
-    setTimeout(() => setShowModal(true), 0);
-  }, []);
+  const setSelectedEdge = useCallback(selectedEdge => dispatch({ type: 'setSelectedEdge', selectedEdge }), [dispatch]);
+  const setSelectedNode = useCallback(
+    selectedNode => {
+      dispatch({ type: 'setSelectedNode', selectedNode });
+      setTimeout(() => setShowModal(true), 0);
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     const { metrics, score, timeInterval, timeScales, sortAnomaly, duration } = searchParams; // query
@@ -159,16 +162,16 @@ const ChartContainer = ({ onClickEdge }) => {
         });
       }
     }
-  }, [selectedNode, clusterBy]);
+  }, [selectedNode, clusterBy, context, destination, dispatch, searchParams, source, urlBase]);
 
   useEffect(() => {
     /* Update the Key which identify the unique combination of data and Panel's filters */
     setDatasetKey(String(Math.random() * 10000));
+    /* optimization: compare anomaly and metricsData just by timestamp + callId string */
+    /* eslint-disable  react-hooks/exhaustive-deps */
   }, [
-    metricsData?.callId,
-    metricsData?.timeStamp,
-    anomalyData?.topologyAnomalyData?.callId,
-    anomalyData?.topologyAnomalyData?.timeStamp,
+    metricsData?.callId + metricsData?.timeStamp,
+    anomalyData?.topologyAnomalyData?.callId + anomalyData?.topologyAnomalyData?.timeStamp,
     source,
     destination,
     JSON.stringify(context),
@@ -184,7 +187,14 @@ const ChartContainer = ({ onClickEdge }) => {
       !isSubAnomalyLoading &&
       prepareMixedData(clusterMetricsData, subTopologyAnomalyData, true)
     );
-  }, [currentDatasetKey, isClusterMetricsLoading && isSubAnomalyLoading]);
+  }, [
+    clusterMetricsData,
+    isClusterMetricsLoading,
+    isSubAnomalyLoading,
+    subTopologyAnomalyData,
+    currentDatasetKey,
+    isClusterMetricsLoading && isSubAnomalyLoading,
+  ]);
 
   if (!metricsData || metricsData?.length === 0) {
     return <AnodotLogoSvg />;

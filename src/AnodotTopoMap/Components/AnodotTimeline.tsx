@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { css, cx } from 'emotion';
-import { isEqual, uniq } from 'lodash';
-import { Button, useTheme } from '@grafana/ui';
-import { formatDate, formatDuration, getPlural } from '../helpers';
+import { isEqual } from 'lodash';
+import { useTheme } from '@grafana/ui';
+import { formatDate } from '../helpers';
 import { getAnodotLink } from '../makeParams';
 import { ReducerContext } from '../reducer_context';
 import RadarIcon from '../../img/RadarIcon';
@@ -37,15 +37,6 @@ const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [],
               <div className="metricsNumber">5</div>
               <div className={secondary}>METRICS</div>
             </div>
-            {/*<div className="cardContent" key={item.topEvents?.[0]?.id}>*/}
-            {/*  <div>{item.topEvents?.[0].title}</div>*/}
-            {/*  <div>*/}
-            {/*    <small>{item.topEvents?.[0]?.category}</small>*/}
-            {/*  </div>*/}
-            {/*  <div>*/}
-            {/*    <small>{item.topEvents?.[0]?.description}</small>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
           </div>
         </div>
       );
@@ -80,15 +71,7 @@ const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [],
   );
 };
 
-const AnomalyCard = ({
-  startDate,
-  anomalies,
-  isActive,
-  setSelectedEdge,
-  selectedEdge,
-  onInvestigateClick,
-  affectedEdges,
-}) => {
+const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selectedEdge }) => {
   const { isDark } = useTheme();
   const [{ searchParams, urlBase }] = useContext(ReducerContext);
   const anomaly = anomalies[0];
@@ -109,16 +92,7 @@ const AnomalyCard = ({
       const isSame = isEqual(selectedEdge, anomalyToSet);
       setSelectedEdge(isSame ? null : anomalyToSet);
     },
-    [anomaly, selectedEdge]
-  );
-
-  const onInvestigate = useCallback(
-    e => {
-      e.stopPropagation();
-      onClick(e);
-      onInvestigateClick(anomalies);
-    },
-    [anomaly]
+    [anomaly, selectedEdge, setSelectedEdge]
   );
 
   return (
@@ -141,21 +115,6 @@ const AnomalyCard = ({
         <div className="metricsNumber">{anomaly?.metricsCount?.anomalyTotal || ''}</div>
         <div className={secondary}>METRICS</div>
       </div>
-      {/*<div className="cardContent" key={anomaly.id}>*/}
-      {/*  <div>*/}
-      {/*    <span className="secondary">Score:</span> {Math.round(anomaly.score * 100)}*/}
-      {/*  </div>*/}
-      {/*  <div>*/}
-      {/*    <span className="secondary">Delta:</span> {Math.round(anomaly.metrics[0]?.lowerPercentageDelta || 0)}%*/}
-      {/*  </div>*/}
-      {/*  <div>*/}
-      {/*    <span className="secondary">Duration:</span> {formatDuration(anomaly.endDate - anomaly.startDate)}*/}
-      {/*  </div>*/}
-      {/*  <div>*/}
-      {/*    <span className="secondary">Metrics: </span>*/}
-      {/*    {anomaly?.metricsCount?.anomalyTotal || ''}*/}
-      {/*  </div>*/}
-      {/*</div>*/}
     </div>
   );
 };
@@ -199,15 +158,6 @@ const itemStyles = css`
   //   border: none;
   // }
 `;
-
-// const overlappingBlock = css`
-//   height: 5px;
-//   width: 15px;
-//   background-color: black;
-//   z-index: 2;
-//   position: relative;
-//   margin-top: -3px;
-// `;
 
 const cardStyles = css`
   padding: 12px;

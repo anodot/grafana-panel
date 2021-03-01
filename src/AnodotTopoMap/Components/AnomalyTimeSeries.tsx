@@ -92,7 +92,9 @@ const AnomalyDetailsTile = ({ anomaly, urlBase }) => {
       setTimeSeriesData(data);
       setIsLoading(false);
     });
-  }, [`${anomaly?.id} ${anomaly?.metricName}`]);
+    /* optimization: compare anomaly just by id + metricName string */
+    /* eslint-disable-next-line  react-hooks/exhaustive-deps */
+  }, [`${anomaly?.id} ${anomaly?.metricName}`, urlBase]); //
 
   return (
     <div

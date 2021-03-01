@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import uniq from 'lodash/uniq';
 import { useTheme } from '@grafana/ui';
+import { render } from '@grafana/data/types/panelEvents';
 
 const NODE_RADIUS = 24;
 const FONT_OFFSET = 10;
@@ -792,8 +793,10 @@ const TopologyMap = ({
       renderLinks({ svg, ...processedLinks, onHoverEdge, onClickEdge, isSubchart, colorsTheme });
       updateView(svg.select('.container'), isSubchart ? DEFAULT_ZERO_POSITION : DEFAULT_POSITION);
     },
-    [svgRef.current, isSubchart, displayName, svgData, isDark]
+    [isSubchart, displayName, svgData, isDark, onClickEdge, onHoverEdge, onClickNode]
   );
+
+  const dataTimeStamp = data?.timestamp;
 
   useEffect(() => {
     if (!initialized || !data) {
@@ -801,7 +804,9 @@ const TopologyMap = ({
     }
     let links = data.links;
     renderData({ root: data.root, links });
-  }, [data?.timestamp, initialized]);
+    /* optimization: compare data just by timestamp */
+    /* eslint-disable-next-line  react-hooks/exhaustive-deps */
+  }, [dataTimeStamp, initialized, renderData]);
 
   useEffect(() => {
     if (!data) {
@@ -809,15 +814,20 @@ const TopologyMap = ({
     }
 
     highlightAnomaly(selectedEdge, svgRef.current, svgData.svgZoom);
-  }, [selectedEdge, data?.timestamp]);
+    /* optimization: compare data just by timestamp */
+    /* eslint-disable-next-line  react-hooks/exhaustive-deps */
+  }, [selectedEdge, dataTimeStamp, svgData.svgZoom]);
 
-  const onSvgClick = useCallback(e => {
-    onClickMap && onClickMap(e);
-    highlightNode(null, d3.select(svgRef.current), isDark ? lightColors : darkColors);
-    //onHoverEdge(null);
-    onClickEdge(null);
-    onClickNode?.(null);
-  }, []);
+  const onSvgClick = useCallback(
+    e => {
+      onClickMap && onClickMap(e);
+      highlightNode(null, d3.select(svgRef.current), isDark ? lightColors : darkColors);
+      //onHoverEdge(null);
+      onClickEdge(null);
+      onClickNode?.(null);
+    },
+    [isDark, onClickNode, onClickEdge, onClickMap]
+  );
 
   return !data ? (
     <h5>No data</h5>

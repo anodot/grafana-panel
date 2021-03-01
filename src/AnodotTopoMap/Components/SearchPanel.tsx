@@ -42,7 +42,7 @@ const SearchPanel = props => {
   );
   // const hasAnomalies = anomalyData?.legendAnomalyData?.length > 0;
   // const [activeTab, setTab] = useState('null');
-  const setSelectedEdge = useCallback(selectedEdge => dispatch({ type: 'setSelectedEdge', selectedEdge }), []);
+  const setSelectedEdge = useCallback(selectedEdge => dispatch({ type: 'setSelectedEdge', selectedEdge }), [dispatch]);
 
   return (
     <div className={wrapperStyles}>

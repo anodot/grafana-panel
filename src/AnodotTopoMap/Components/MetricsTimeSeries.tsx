@@ -58,7 +58,10 @@ export const MetricsTSList = ({ metricsParams }) => {
       dispatch({ type: 'setMetricsTimeSeries', value: results });
       setIsLoading(false);
     });
-  }, [timeScales, timeInterval, metricsParams.id]);
+    /* optimization: compare metricsParams just by id string */
+    /* eslint-disable-next-line  react-hooks/exhaustive-deps */
+  }, [timeScales, timeInterval, metricsParams.id, dispatch]);
+
   const metricsTimeSeriesJoined = [].concat(...metricsTimeSeries).filter(d => !!d?.dataPoints?.length);
 
   const dataLength = metricsTimeSeriesJoined.length;
