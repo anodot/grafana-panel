@@ -1,0 +1,33 @@
+{
+  "name": "anodot-panel",
+  "version": "1.0.6",
+  "description": "Anodot Grafana Panel for anodot-datasource plugin\",",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch",
+    "release": "bash release.sh"
+  },
+  "author": "ua.ulin@gmail.com",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "date-fns": "^2.22.1"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.1.2",
+    "@emotion/styled": "^11.0.0",
+    "@grafana/data": "^7.0.0",
+    "@grafana/toolkit": "^7.0.0",
+    "@grafana/ui": "^7.0.0",
+    "d3": "^6.1.1",
+    "emotion": "10.0.27",
+    "highcharts": "^8.1.2",
+    "highcharts-react-official": "^3.0.0",
+    "lodash": "^4.17.15",
+    "react-virtualized": "^9.22.2"
+  },
+  "engines": {
+    "node": ">=12 <13"
+  }
+}

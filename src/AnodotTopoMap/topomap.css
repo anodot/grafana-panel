@@ -1,0 +1,93 @@
+/*Styles for Topology map */
+#anodot-topo-map {
+  overflow: hidden;
+}
+.anomaly-edge + .selection-path {
+  cursor: pointer;
+}
+/*.edge-group {*/
+/*    stroke-width: 20;*/
+/*    cursor: pointer;*/
+/*}*/
+.visual-path {
+  stroke-width: 2;
+  /*opacity: 0.6;*/
+}
+
+/*.visual-path:hover {*/
+/*    stroke-width: 3;*/
+/*    !*opacity: 1;*!*/
+/*}*/
+.node:hover tspan {
+  fill: black;
+}
+/*.node.clicked, .node.selected {*/
+/*    stroke-width: 5px;*/
+/*    opacity: 0.7;*/
+/*}*/
+.node.selected rect {
+  /*fill: #ff5653 !important;*/
+  /*stroke: #ff7777 !important;*/
+}
+
+.anomaly-edge {
+  /*stroke: red;*/
+  stroke-width: 3;
+}
+.anomaly-edge:hover {
+  /*stroke: red;*/
+  stroke-width: 3 !important;
+}
+
+.neutral-edge {
+  stroke: #79938c;
+}
+
+.anomaly-edge.highlighted-edge {
+  stroke: #eb6f07;
+  opacity: 1;
+  stroke-width: 4;
+  stroke-dasharray: 15;
+  stroke-dashoffset: 30;
+  animation: dash 1s linear forwards infinite;
+}
+
+.neutral-edge.highlighted-edge {
+  opacity: 1;
+  stroke-width: 6;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke: #eb6f07;
+  }
+
+  100% {
+    stroke: #ff8f24;
+  }
+}
+
+#tooltip-div {
+  background: rgb(32, 34, 38);
+  border: 1px solid rgb(44, 50, 53);
+  border-radius: 3px;
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  position: absolute;
+  visibility: hidden;
+  display: inline-block;
+}
+
+.cluster-label {
+  opacity: 0.1;
+  font-size: 50px;
+}
+
+.cluster-tooltip {
+  fill: #238ac2 !important;
+  background-color: #4caf50;
+}
