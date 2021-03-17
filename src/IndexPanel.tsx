@@ -18,14 +18,14 @@ import './common.css';
 interface Props extends PanelProps<PanelOptions> {}
 
 export const Panel: React.FC<Props> = props => {
-  const { width, height, data, options, replaceVariables } = props;
+  const { width, height, data, options } = props;
   const styles = getStyles();
   const theme = useTheme();
   const isLoading = props?.data.state === 'Loading';
 
   if (!theme.isDark) {
     /* Fix Grafana Tooltip's bug - it is indifferent to the light theme */
-    /* eslint-disable  @typescript-eslint/no-unused-expressions */
+    /* eslint-disable-next-line  @typescript-eslint/no-unused-expressions */
     injectGlobal`
       .popper__background {
         background-color: white !important;

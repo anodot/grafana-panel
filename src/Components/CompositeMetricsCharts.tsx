@@ -10,9 +10,9 @@ import { css, cx } from 'emotion';
 import SummaryHeader from './ChartsSummaryHeader';
 highchartsMore(Highcharts);
 
-const CompositeMetricsCharts: React.FC<VisOptions> = ({ options, serie, height }) => {
+const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
   const theme = useTheme();
-  const { meta, metricsComposite, showMultiline } = serie.anodotPayload;
+  const { meta, metricsComposite, showMultiline, timeInterval } = serie.anodotPayload;
   const metrics = metricsComposite;
   const isDark = theme.isDark;
   const lengthsCheck = metrics.reduce((sum, { dataPoints }) => sum + dataPoints.length, 0);
@@ -25,6 +25,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ options, serie, height }
       className={cx(
         { isDark },
         css`
+          width: ${width}px;
           height: ${height}px;
           overflow: auto;
           display: flex;
@@ -53,10 +54,12 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ options, serie, height }
                 <HighchartsReact
                   highcharts={Highcharts}
                   options={getChartsOptions({
+                    width,
                     areaData: multiplyX(baseline),
                     lineData: multiplyX(dataPoints),
                     chartClassNames: isDark ? 'isDark' : '',
                     isDark,
+                    timeInterval,
                   })}
                 />
               </div>

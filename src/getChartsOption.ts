@@ -11,16 +11,23 @@ export function getChartsOptions({
   otherAnomalys = [],
   isDark,
   isMulti,
+  timeInterval,
+  width,
+  height = 200,
 }) {
   const config = {
     title: {
       text: '',
     },
     chart: {
-      height: '200px',
+      height,
+      width: width ? width - 16 : undefined,
       zoomType: 'xy',
     },
     xAxis: {
+      min: timeInterval?.startDate ? timeInterval?.startDate * 1000 : undefined,
+      max: timeInterval?.endDate ? timeInterval?.endDate * 1000 : undefined,
+      showFirstLabel: true,
       type: 'datetime',
       tickPosition: 'inside',
       gridLineWidth: 1,
@@ -203,7 +210,6 @@ export function getChartsOptions({
       zones: otherZones.concat(anomalyZone),
     };
   }
-
   return config;
 }
 

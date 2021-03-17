@@ -10,9 +10,10 @@ import SummaryHeader from './ChartsSummaryHeader';
 
 highchartsMore(Highcharts);
 
-const AnomaliesCharts: React.FC<VisOptions> = ({ options, serie, height }) => {
+const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
   const { isDark } = useTheme();
-  const anomalies = serie?.anodotPayload?.anomaliesCharts;
+  const { anomaliesCharts, timeInterval } = serie.anodotPayload;
+  const anomalies = anomaliesCharts;
 
   if (!anomalies || anomalies.length === 0) {
     return <div>No data for Anomalies charts</div>;
@@ -32,7 +33,9 @@ const AnomaliesCharts: React.FC<VisOptions> = ({ options, serie, height }) => {
                   anomaly: anomalies[0],
                   otherAnomalies: otherAnomalyIntervals,
                   chartClassNames: isDark ? 'isDark' : '',
+                  timeInterval,
                   isDark,
+                  width,
                 })}
               />
             </div>
