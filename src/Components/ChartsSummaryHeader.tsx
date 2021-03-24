@@ -33,7 +33,7 @@ const keyS = css`
 `;
 
 // TODO: is Grafana Tooltip able to display the light theme? It's always black.
-const SummaryHeader = ({ properties, tags, metricName, origin }) => {
+const SummaryHeader = ({ properties, tags, metricName, origin, prefix }) => {
   const theme = useTheme();
   const propertiesTable = (
     <div>
@@ -94,6 +94,7 @@ const SummaryHeader = ({ properties, tags, metricName, origin }) => {
   );
   return (
     <div className={chartInfoS}>
+      {prefix}
       <Tooltip content={propertiesTable} theme="info">
         <span
           className={css`

@@ -12,8 +12,7 @@ highchartsMore(Highcharts);
 
 const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
   const { isDark } = useTheme();
-  const { anomaliesCharts, timeInterval } = serie.anodotPayload;
-  const anomalies = anomaliesCharts;
+  const { anomaliesCharts: anomalies, timeInterval } = serie.anodotPayload;
 
   if (!anomalies || anomalies.length === 0) {
     return <div>No data for Anomalies charts</div>;
@@ -21,10 +20,19 @@ const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
   return (
     <div style={{ height: height, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
       {anomalies.map(
-        ({ baseline, dataPoints = [], tags = [], anomalies, otherAnomalyIntervals, properties, what }) =>
+        ({ baseline, dataPoints = [], tags = [], anomalies, otherAnomalyIntervals, properties, what, metricsCount }) =>
           dataPoints.length > 0 && (
             <div key={name} style={{ marginTop: 30 }}>
-              <SummaryHeader properties={properties} tags={tags} metricName={what} />
+              <SummaryHeader
+                properties={properties}
+                tags={tags}
+                metricName={what}
+                prefix={
+                  <span>
+                    1/{metricsCount.total} [Of {metricsCount.anomalyTotal}]{' '}
+                  </span>
+                }
+              />
               <HighchartsReact
                 highcharts={Highcharts}
                 options={getChartsOptions({
