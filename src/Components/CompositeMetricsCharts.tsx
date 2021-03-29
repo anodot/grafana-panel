@@ -15,7 +15,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width }) 
   const { meta, metricsComposite, showMultiline, timeInterval } = serie.anodotPayload;
   const metrics = metricsComposite;
   const isDark = theme.isDark;
-  const lengthsCheck = metrics.reduce((sum, { dataPoints }) => sum + dataPoints.length, 0);
+  const lengthsCheck = metrics?.reduce((sum, { dataPoints }) => sum + dataPoints.length, 0);
 
   if (!metrics || metrics.length === 0 || lengthsCheck < 2) {
     return <div>No data for Metrics Composite charts</div>;
@@ -69,7 +69,12 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width }) 
         <div>
           <HighchartsReact
             highcharts={Highcharts}
-            options={getMultipleOptions(metrics, { chartClassNames: isDark ? 'isDark' : '', isDark, isMulti: true })}
+            options={getMultipleOptions(metrics, {
+              chartClassNames: isDark ? 'isDark' : '',
+              isDark,
+              isMulti: true,
+              timeInterval,
+            })}
           />
           <div>
             {metrics.map(({ tags = [], properties = [], meta }, i) => (
