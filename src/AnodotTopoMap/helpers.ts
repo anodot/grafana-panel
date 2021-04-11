@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { urlBase, timeFormat, splitSign } from './constants';
+import { splitSign } from './constants';
 import { isEqual } from 'lodash';
 
 // export const getSourcesDestinationsLists = (datasets = []) => {
@@ -56,7 +56,6 @@ export const convertServerDataToTopology = (dataSets = [], sourceKey, destinatio
 
 export const convertMetricsDataToSubTopology = (results, selectedNode, clusterby) => {
   const { activeSource, activeDest, ...contextFields } = selectedNode;
-  const clusterId = JSON.stringify(contextFields);
   const datasetsDict = results.reduce((res, cur) => {
     if (cur.length && cur[0]?.what) {
       const metric = cur[0]?.what;
