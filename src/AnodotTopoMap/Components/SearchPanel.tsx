@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React, { useCallback, useContext, useState } from 'react';
-import { css, cx } from 'emotion';
-import { useTheme, Spinner } from '@grafana/ui';
+import React, { useCallback, useContext } from 'react';
+import { css } from 'emotion';
+import { Spinner, useTheme } from '@grafana/ui';
 import AnodotTimeline from './AnodotTimeline';
 import { ReducerContext } from '../reducer_context';
-import TimeLineIcon from '../../img/TimeLineLogoComponent';
+import TimeLineIcon from '../../Components/TimeLineLogoComponent';
 
 const wrapperStyles = css`
   position: absolute;
@@ -22,12 +22,15 @@ const tabsIcons = css`
   padding: 5px;
   width: 70px;
   justify-content: space-between;
+
   button {
     opacity: 0.5;
   }
+
   button.active {
     opacity: 1;
   }
+
   button.hasAnomalies {
     svg {
       fill: red;

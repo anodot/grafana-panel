@@ -6,7 +6,7 @@ import { useTheme } from '@grafana/ui';
 import { formatDate } from '../helpers';
 import { getAnodotLink } from '../makeParams';
 import { ReducerContext } from '../reducer_context';
-import RadarIcon from '../../img/RadarIcon';
+import RadarIcon from '../../Components/RadarIcon';
 
 const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [], onInvestigateClick }) => {
   const activeAnomaliesIds = selectedEdge?.anomalies?.map(obj => obj.anomalyId);

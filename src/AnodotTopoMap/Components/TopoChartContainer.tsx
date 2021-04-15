@@ -1,19 +1,13 @@
 // @ts-nocheck
-import React, { useCallback, useContext, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Spinner } from '@grafana/ui';
 import { AutoSizer } from 'react-virtualized';
 import TopologyMap from './TopoChart';
 import { ReducerContext } from '../reducer_context';
 import { getMetricsData, loadAnomalyData } from '../api';
 import CustomModal from './CustomModal';
-import {
-  convertAnomaliesToEdges,
-  convertMetricsDataToSubTopology,
-  convertServerDataToTopology,
-  manageLinksInCluster,
-  mixEdges,
-} from '../helpers';
-import AnodotLogoSvg from '../../img/AnodotLogoComponent';
+import { convertAnomaliesToEdges, convertMetricsDataToSubTopology, manageLinksInCluster, mixEdges } from '../helpers';
+import AnodotLogoSvg from '../../Components/AnodotLogoComponent';
 
 const ChartContainer = ({ onClickEdge }) => {
   const [

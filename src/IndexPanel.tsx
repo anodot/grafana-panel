@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { PanelOptions } from 'types';
 import { css, cx, injectGlobal } from 'emotion';
-import { stylesFactory, Spinner } from '@grafana/ui';
+import { stylesFactory } from '@grafana/ui';
 import CompositeMetricsCharts from './Components/CompositeMetricsCharts';
 import AnomaliesCharts from './Components/AnomaliesCharts';
 import AnomaliesList from './Components/AnomaliesList';
@@ -11,7 +11,7 @@ import Alerts from './Components/Alerts';
 import AnodotTopoMap from './AnodotTopoMap/index.tsx';
 import ErrorBoundary from './Components/ErrorBoundary.tsx';
 import { useTheme } from '@grafana/ui';
-import AnodotLogoSvg from './img/AnodotLogoComponent';
+import AnodotLogoSvg from './Components/AnodotLogoComponent';
 
 import './common.css';
 
