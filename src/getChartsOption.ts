@@ -2,6 +2,8 @@
 import { formatDuration } from './helpers';
 import format from 'date-fns/format';
 
+const timezoneOffset = new Date().getTimezoneOffset();
+
 export function getChartsOptions({
   areaData,
   lineData,
@@ -79,8 +81,7 @@ export function getChartsOptions({
                     <div><span>Duration:</span> ${formatDuration(anomaly[1] - anomaly[0])}</div>
                 </div>
           `;
-          const timezoneOffset = new Date().getTimezoneOffset() * 60000;
-          const timeStr = format(new Date(x + timezoneOffset), 'eee, MMM d @ hh:mm a');
+          const timeStr = format(new Date(x), 'eee, MMM d @ hh:mm a');
 
           return `
             <div class="anodot-chart-tooltip">
@@ -124,6 +125,9 @@ export function getChartsOptions({
       },
     },
     series: [],
+    time: {
+      timezoneOffset: timezoneOffset,
+    },
   };
 
   if (chartClassNames) {
@@ -165,7 +169,7 @@ export function getChartsOptions({
     multilinesData.forEach((d, i) => {
       config.series.push({
         type: 'line',
-        color: undefined,
+        color: d.color,
         zIndex: 1,
         data: d,
         className: 'anodot-line',
