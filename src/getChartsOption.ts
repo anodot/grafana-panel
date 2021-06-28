@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { formatDuration } from './helpers';
-import format from 'date-fns/format';
+import { safeFormat, defaultChartsTooltipTimeFormat } from './safeFormat';
 
 const timezoneOffset = new Date().getTimezoneOffset();
 
@@ -16,6 +16,7 @@ export function getChartsOptions({
   timeInterval,
   width,
   height = 200,
+  timeFormat,
 }) {
   const config = {
     title: {
@@ -81,7 +82,7 @@ export function getChartsOptions({
                     <div><span>Duration:</span> ${formatDuration(anomaly[1] - anomaly[0])}</div>
                 </div>
           `;
-          const timeStr = format(new Date(x), 'eee, MMM d @ hh:mm a');
+          const timeStr = safeFormat(x / 1000, timeFormat || defaultChartsTooltipTimeFormat);
 
           return `
             <div class="anodot-chart-tooltip">

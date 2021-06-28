@@ -3,12 +3,12 @@ import React, { useCallback, useContext } from 'react';
 import { css, cx } from 'emotion';
 import { isEqual } from 'lodash';
 import { useTheme } from '@grafana/ui';
-import { formatDate } from '../helpers';
 import { getAnodotLink } from '../makeParams';
 import { ReducerContext } from '../reducer_context';
 import RadarIcon from '../../Components/RadarIcon';
+import { safeFormat, defaultTopologyTimeFormat } from '../../safeFormat';
 
-const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [], onInvestigateClick }) => {
+const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [], onInvestigateClick, timeFormat }) => {
   const activeAnomaliesIds = selectedEdge?.anomalies?.map(obj => obj.anomalyId);
   const alterList = anomalies.concat(events).sort((a, b) => b.startDate - a.startDate);
   const isFiltrationOn = !selectedEdge?.selectedFromPanel && selectedEdge?.hasAnomaly;
@@ -30,7 +30,12 @@ const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [],
               <div>Event</div>
               <div>
                 <span className={secondary}>Started: </span>
-                {formatDate(item.startDate)}
+                {safeFormat(
+                  item.startDate,
+                  timeFormat || defaultTopologyTimeFormat,
+                  undefined,
+                  defaultTopologyTimeFormat
+                )}
               </div>
             </div>
             <div className={rightSection}>
@@ -52,6 +57,7 @@ const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [],
             onInvestigateClick={onInvestigateClick}
             affectedEdges={item.affectedEdges}
             startDate={item.startDate}
+            timeFormat={timeFormat}
           />
         </div>
       );
@@ -71,7 +77,7 @@ const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [],
   );
 };
 
-const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selectedEdge }) => {
+const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selectedEdge, timeFormat }) => {
   const { isDark } = useTheme();
   const [{ searchParams, urlBase }] = useContext(ReducerContext);
   const anomaly = anomalies[0];
@@ -102,7 +108,9 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
         <div>{anomaly.metricName}</div>
         <div>
           <span className={secondary}>Started: </span>
-          <span>{formatDate(startDate)}</span>
+          <span>
+            {safeFormat(startDate, timeFormat || defaultTopologyTimeFormat, undefined, defaultTopologyTimeFormat)}
+          </span>
         </div>
         <div className="activeContent">
           <span onClick={onClick}>Show on Map</span>

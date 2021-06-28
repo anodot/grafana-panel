@@ -3,7 +3,7 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { PanelOptions } from 'types';
 import { css, cx, injectGlobal } from 'emotion';
-import { stylesFactory } from '@grafana/ui';
+import { LoadingPlaceholder, stylesFactory } from '@grafana/ui';
 import CompositeMetricsCharts from './Components/CompositeMetricsCharts';
 import AnomaliesCharts from './Components/AnomaliesCharts';
 import AnomaliesList from './Components/AnomaliesList';
@@ -22,7 +22,7 @@ export const Panel: React.FC<Props> = props => {
   const styles = getStyles();
   const theme = useTheme();
   const isLoading = props?.data.state === 'Loading';
-
+  console.log('25|IndexPanel: ', data, '#');
   if (!theme.isDark) {
     /* Fix Grafana Tooltip's bug - it is indifferent to the light theme */
     /* eslint-disable-next-line  @typescript-eslint/no-unused-expressions */
@@ -56,7 +56,7 @@ export const Panel: React.FC<Props> = props => {
         <div className={styles.anodotPlaceholderS}>
           <AnodotLogoSvg height={height * 0.7} />
           <p>
-            <small>Waiting for Data</small>
+            <LoadingPlaceholder text="Loading..." />
           </p>
         </div>
       ) : (

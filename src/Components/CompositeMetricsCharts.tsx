@@ -43,7 +43,7 @@ const ColorLabel = ({ color }) => (
   />
 );
 
-const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
+const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, options, options }) => {
   const { isDark } = useTheme();
   const { meta, metricsComposite, showMultiline, timeInterval } = serie.anodotPayload;
   let metrics = metricsComposite;
@@ -98,6 +98,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width }) 
                     chartClassNames: isDark ? 'isDark' : '',
                     isDark,
                     timeInterval,
+                    timeFormat: options.timeFormat,
                   })}
                 />
               </div>
@@ -112,6 +113,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width }) 
               isDark,
               isMulti: true,
               timeInterval,
+              timeFormat: options.timeFormat,
             })}
           />
           <div>

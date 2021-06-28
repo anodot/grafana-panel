@@ -10,7 +10,7 @@ import SummaryHeader from './ChartsSummaryHeader';
 
 highchartsMore(Highcharts);
 
-const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
+const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width, options: { timeFormat } }) => {
   const { isDark } = useTheme();
   const { anomaliesCharts: anomalies, timeInterval } = serie.anodotPayload;
 
@@ -44,6 +44,7 @@ const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width }) => {
                   timeInterval,
                   isDark,
                   width,
+                  timeFormat,
                 })}
               />
             </div>

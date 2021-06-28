@@ -3,6 +3,9 @@ import React from 'react';
 import { VisOptions } from 'types';
 import { css, cx } from 'emotion';
 import { useTheme } from '@grafana/ui';
+import { getAlertsAnodotLink } from '../helpers';
+import isToday from 'date-fns/isToday';
+import { safeFormat, defaultTimeFormat } from '../safeFormat';
 
 const wrapperS = css`
   overflow: auto;
@@ -51,11 +54,45 @@ const tableStyles = css`
   }
 `;
 
-const Alerts: React.FC<VisOptions> = ({ serie, height, width }) => {
+const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
   const { colors, isDark } = useTheme();
   const {
     anodotPayload: { alerts, urlBase },
   } = serie;
+
+  const getAlertNode = alert => {
+    const postfix = alert.type === 'static' ? ' (Static)' : alert.type === 'noData' ? ' (No Data)' : '';
+    return alert.type === 'anomaly' ? (
+      <a target="_blank" href={getAlertsAnodotLink(alert, urlBase)}>
+        {alert.title + postfix}
+      </a>
+    ) : (
+      alert.title + postfix
+    );
+  };
+
+  const getAlertCells = alert => {
+    const formattedStartDateFull = safeFormat(alert.startTime, defaultTimeFormat);
+    const isTodayFormat = isToday(alert.startTime * 1000) ? 'HH:mm' : 'MMM dd';
+    const formattedStartDateShort = safeFormat(
+      alert.startTime,
+      options.timeFormat || isTodayFormat,
+      undefined,
+      isTodayFormat
+    );
+
+    return (
+      <>
+        <td className={`severity ${alert.severity}`} />
+        <td className="name">{getAlertNode(alert)}</td>
+        <td className="started" title={formattedStartDateFull}>
+          {formattedStartDateShort}
+        </td>
+        <td className="duration">{alert.formatted.duration}</td>
+        <td className="score">{alert.formatted.score || '–'}</td>
+      </>
+    );
+  };
 
   return (
     <>
@@ -86,20 +123,8 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, width }) => {
             </tr>
           </thead>
           <tbody>
-            {alerts?.map(({ id, alertConfigurationId, severity, title, formatted, type = '' }) => (
-              <tr key={id}>
-                <td className={`severity ${severity}`} />
-                <td className="name">
-                  <a target="_blank" href={`${urlBase}/#!/r/alert-manager/edit/${alertConfigurationId}/settings`}>
-                    {title}
-                    {type && type === 'static' && ' (Static)'}
-                    {type && type === 'noData' && ' (No Data)'}
-                  </a>
-                </td>
-                <td className="started">{formatted.started}</td>
-                <td className="duration">{formatted.duration}</td>
-                <td className="score">{formatted.score || '–'}</td>
-              </tr>
+            {alerts?.map(alert => (
+              <tr key={alert.id}>{getAlertCells(alert)}</tr>
             ))}
           </tbody>
         </table>

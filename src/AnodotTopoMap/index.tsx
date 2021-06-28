@@ -10,7 +10,7 @@ import { VisOptions } from 'types';
 
 import './topomap.css';
 
-const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie }) => {
+const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options }) => {
   const [{}, dispatch] = useContext(ReducerContext);
   const { metrics = [], anomalies = [], query = {}, callId, urlBase, propertiesOptions, events } =
     serie?.anodotPayload || {};
@@ -100,7 +100,7 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie }) => {
         position: relative;
       `}
     >
-      <SearchPanel onInvestigateClick={onInvestigateClick} />
+      <SearchPanel onInvestigateClick={onInvestigateClick} timeFormat={options.timeFormat} />
       <div
         className={css`
           display: flex;
