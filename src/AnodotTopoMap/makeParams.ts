@@ -179,21 +179,11 @@ export function makeMetricTimeSeriesParams(
 }
 
 export function getAnodotLink(query, anomalyId, metric, urlBase) {
-  const {
-    timeScales,
-    timeInterval,
-    score,
-    duration,
-    filters,
-    deltaValue,
-    deltaType,
-    showEvents,
-    sortBy,
-    direction,
-  } = query;
+  const { timeScales, timeInterval, score, duration, filters, deltaValue, deltaType, showEvents, sortBy, direction } =
+    query;
 
   const encodedExpression = encodeURIComponent(b64EncodeUnicode(JSON.stringify(getQ(metric, filters)?.expression)));
-  const toLiteral = value => `${value}(${value})`;
+  const toLiteral = (value) => `${value}(${value})`;
   const params = {
     anomalies: `0(${anomalyId})`,
     duration: toLiteral(duration),

@@ -2,10 +2,10 @@
 import { getQ } from './AnodotTopoMap/helpers';
 
 export const getPluoral = (n, base, suffix = 's') => base + (n === 1 ? '' : suffix);
-export const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export const formatDate = (secs, format = 'MM/DD/YYYY') => {
-  const addZero = v => ('0' + v).slice(-2);
+  const addZero = (v) => ('0' + v).slice(-2);
   let d = new Date(secs * 1000);
   const hours = `${addZero(d.getHours())}:${addZero(d.getMinutes())}`;
   const date = format
@@ -15,11 +15,11 @@ export const formatDate = (secs, format = 'MM/DD/YYYY') => {
   return (checkIsToday(secs * 1000) ? 'Today ' : `${date} `) + hours;
 };
 
-export const checkIsToday = mSeconds => {
+export const checkIsToday = (mSeconds) => {
   return new Date().getTime() - mSeconds < 86400000 && new Date().getDate() === new Date(mSeconds).getDate();
 };
 
-export const formatDuration = seconds => {
+export const formatDuration = (seconds) => {
   const minutes = Math.round(seconds / 60);
   if (minutes < 60) {
     return `${minutes} ${getPluoral(minutes, 'minute')}`;
@@ -68,7 +68,7 @@ export function getAlertsAnodotLink(alert, urlBase) {
   } = alert;
   const durationScale = timescaleToDurationScaleMap[timeScale];
   const resolution = timescaleToResolutionMap[timeScale];
-  const toLiteral = value => `${value}(${value})`;
+  const toLiteral = (value) => `${value}(${value})`;
   const params = {
     anomalies: `0(${groupId})`,
     duration: '1(1)', // should be always 1

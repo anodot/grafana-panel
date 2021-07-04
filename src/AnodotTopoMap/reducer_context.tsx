@@ -34,7 +34,7 @@ const reducer = (state, action) => {
   let tempState = { ...state };
   if (action.type === 'bulk') {
     /* so we can to modify several properties in one time */
-    action.actions.forEach(action => {
+    action.actions.forEach((action) => {
       tempState = reducer(tempState, action);
     });
     return tempState;
@@ -178,7 +178,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const ReducerContextProvider = props => {
+export const ReducerContextProvider = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return <ReducerContext.Provider value={[state, dispatch]}>{props.children}</ReducerContext.Provider>;

@@ -20,11 +20,11 @@ export const getMetricsData = (metricName, filters = [], urlBase) => {
   };
   const url = urlBase + getQueryParamsUrl(params, '/metrics/composite/names');
   const payload = makeMetricsPayload(metricName, filters);
-  return makeRequest(url, payload).then(data => data && data.metrics);
+  return makeRequest(url, payload).then((data) => data && data.metrics);
   // .then(data => metricsResponse) //data && data.metrics);
 };
 
-export const getPropertiesDict = metric => {
+export const getPropertiesDict = (metric) => {
   const url = `${urlBaseHardcoded}/search/metrics/propandval`;
   const payload = {
     expression: '',
@@ -48,7 +48,7 @@ export const getPropertiesDict = metric => {
   }));
 };
 
-export const getMetricsOptions = loginCallback => {
+export const getMetricsOptions = (loginCallback) => {
   const url = `${urlBaseHardcoded}/search/metrics/props`;
   const payload = {
     properties: ['what'],
@@ -56,8 +56,8 @@ export const getMetricsOptions = loginCallback => {
     filter: [],
     size: 10000,
   };
-  return makeRequest(url, payload, loginCallback).then(data =>
-    data && data.propertyValues ? data.propertyValues.map(el => el.value) : []
+  return makeRequest(url, payload, loginCallback).then((data) =>
+    data && data.propertyValues ? data.propertyValues.map((el) => el.value) : []
   );
 };
 
@@ -104,7 +104,7 @@ export const loadEventsData = ({ timeInterval, filters, metric }) => {
   };
   const url = getQueryParamsUrl(params, '/user-events/execute'); //formatAnomaliesUrl(params, 0, 1000);
   return makeRequest(url, payload).then((data = {}) =>
-    data.events?.map(e => ({ ...e, startDate: e.date, isEvent: true, measure: metric }))
+    data.events?.map((e) => ({ ...e, startDate: e.date, isEvent: true, measure: metric }))
   );
 };
 
@@ -120,7 +120,7 @@ export const loadMetricsTimeSeries = (metricParams, timeParams, urlBase) => {
       to: metricParams.to,
     };
 
-    return data.metrics?.map(m => ({ ...m, meta }));
+    return data.metrics?.map((m) => ({ ...m, meta }));
   });
 };
 
@@ -149,8 +149,8 @@ export async function makeRequest(url, payload = null, loginCallback) {
       };
 
   return fetch(url, options)
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.status === 401) {
         return login(loginCallback).then(() => makeRequest(url, payload, loginCallback));
       } else if (data.status === 500) {
@@ -159,7 +159,7 @@ export async function makeRequest(url, payload = null, loginCallback) {
         return data || {};
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('Request ERROR: ', url, error);
     });
 }
@@ -183,8 +183,8 @@ export function login(clb) {
   };
 
   return fetch(url, options)
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.token) {
         localStorage.setItem(tokenKey, data.token);
         clb && clb(true);
@@ -194,7 +194,7 @@ export function login(clb) {
         return login();
       }
     })
-    .catch(error => {
+    .catch((error) => {
       alert('Reload the page and enter your login/password');
       clb && clb(true);
     });

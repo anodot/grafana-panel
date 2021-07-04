@@ -31,7 +31,7 @@ const getNodeId: string = (directions, directionKey, context = []) => {
   const res = {
     name: directions[directionKey],
   };
-  context.forEach(key => {
+  context.forEach((key) => {
     if (!directions[key]) {
       return null;
     } /* we don't need nodes with any null values */
@@ -43,7 +43,7 @@ const getNodeId: string = (directions, directionKey, context = []) => {
 export const convertServerDataToTopology = (dataSets = [], sourceKey, destinationKey, context = [], options) => {
   const groupedData = groupDataOnNodesAndEdges(dataSets, sourceKey, destinationKey, context, options);
   const root = clusteriseData(groupedData, context[0]);
-  const homelessIndex = root.children.findIndex(el => el.id === '0');
+  const homelessIndex = root.children.findIndex((el) => el.id === '0');
   if (homelessIndex !== -1) {
     root.children = [
       ...root.children.splice(0, homelessIndex),
@@ -63,7 +63,7 @@ export const convertMetricsDataToSubTopology = (results, selectedNode, clusterby
     }
     return res;
   }, {});
-  const dataSets = Object.keys(datasetsDict).map(metric => ({ metric, dataSet: datasetsDict[metric] }));
+  const dataSets = Object.keys(datasetsDict).map((metric) => ({ metric, dataSet: datasetsDict[metric] }));
   const context = Object.keys(contextFields);
   context.push(clusterby);
   const groupedData = groupDataOnNodesAndEdges(dataSets, activeSource, activeDest, context, { filters: contextFields });
@@ -79,7 +79,7 @@ export const convertMetricsDataToSubTopology = (results, selectedNode, clusterby
     value: 1000,
   });
   const links = manageLinksInCluster(groupedData.edges, contextFields, clusterby);
-  const homelessIndex = root.children.findIndex(el => el.id === '0');
+  const homelessIndex = root.children.findIndex((el) => el.id === '0');
   if (homelessIndex !== -1) {
     root.children = [
       ...root.children.splice(0, homelessIndex),
@@ -96,7 +96,7 @@ export const convertAnomaliesToEdges = (dataSets = [], sourceKey, destinationKey
   const anomalyConnectionsDict = {};
 
   dataSets.forEach(({ metricName, dataSet }) => {
-    dataSet.forEach(record => {
+    dataSet.forEach((record) => {
       const { metrics = [], id } = record;
       const options = {
         isAnomaly: true,
@@ -113,18 +113,18 @@ export const convertAnomaliesToEdges = (dataSets = [], sourceKey, destinationKey
       if (edges.length) {
         anomalyEdges[id] = anomalyEdges[id] || [];
         anomalyEdges[id].push({ ...record, metricName, edges });
-        anomalyConnectionsDict[id] = (anomalyConnectionsDict[id] || []).concat(...edges.map(e => e.connectionId));
+        anomalyConnectionsDict[id] = (anomalyConnectionsDict[id] || []).concat(...edges.map((e) => e.connectionId));
         edgesCollection = edgesCollection.concat(edges);
       }
     });
   });
 
   return {
-    legendAnomalyData: Object.keys(anomalyEdges).map(anomalyId => ({
+    legendAnomalyData: Object.keys(anomalyEdges).map((anomalyId) => ({
       anomalyId,
       affectedEdges: anomalyConnectionsDict[anomalyId],
       records: anomalyEdges[anomalyId],
-      startDate: Math.min(...anomalyEdges[anomalyId].map(rec => rec.startDate)),
+      startDate: Math.min(...anomalyEdges[anomalyId].map((rec) => rec.startDate)),
     })),
     topologyAnomalyData: { edgesCollection, anomalyConnectionsDict },
   };
@@ -136,19 +136,19 @@ export const mixEdges = (metricsEdges = [], anomalyEdges, isSubChart) => {
   const idKey = isSubChart ? 'subConnectionId' : 'connectionId';
   /* we store all anomaly duplicates by specific 'connectionId' in a dictionary */
   let anomaliesDict = {};
-  edgesCollection.forEach(a => {
+  edgesCollection.forEach((a) => {
     anomaliesDict[a[idKey]] = (anomaliesDict[a[idKey]] || []).concat(a.duplicates);
   });
 
   /* mix all metric's duplicates with anomaly's duplicates if they have the same connectionId */
-  return metricsEdges.map(m => {
+  return metricsEdges.map((m) => {
     const res = { ...m };
     const anomalyDuplicates = anomaliesDict[m[idKey]];
     if (anomalyDuplicates) {
-      res.latestAnomalyTime = Math.max(...anomalyDuplicates.map(a => a.record.anomalies[0][1]));
+      res.latestAnomalyTime = Math.max(...anomalyDuplicates.map((a) => a.record.anomalies[0][1]));
       res.duplicates = m.duplicates.concat(anomalyDuplicates);
       res.hasAnomaly = true;
-      res.anomalies = anomalyDuplicates.map(a => ({
+      res.anomalies = anomalyDuplicates.map((a) => ({
         anomalyId: a.anomalyId,
         affectedEdges: anomalyConnectionsDict[a.anomalyId],
       }));
@@ -165,7 +165,7 @@ const groupDataOnNodesAndEdges = (dataSets = [], sourceKey, destinationKey, cont
 
   const edgesDict = {};
   dataSets.forEach(({ metricName, dataSet }) => {
-    dataSet.forEach(record => {
+    dataSet.forEach((record) => {
       const fieldsDict = {};
       const { properties } = record;
       properties.forEach(({ key, value }) => {
@@ -238,7 +238,7 @@ const groupDataOnNodesAndEdges = (dataSets = [], sourceKey, destinationKey, cont
   const nodesDict = {};
   const edges = Object.values(edgesDict);
 
-  edges.forEach(edge => {
+  edges.forEach((edge) => {
     /* build nodes dict based on edges' end-points and count amount of links for every node */
     const { connectionId, duplicates, endPoints, activeDest, activeSource } = edge;
 
@@ -269,7 +269,7 @@ const groupDataOnNodesAndEdges = (dataSets = [], sourceKey, destinationKey, cont
   });
 
   /* add value based on the counter - how many links do every node has */
-  const nodes = Object.keys(nodesDict).map(nodeId => {
+  const nodes = Object.keys(nodesDict).map((nodeId) => {
     const { edgesData, activeDest, activeSource } = nodesDict[nodeId];
     return {
       cluster: '0',
@@ -285,15 +285,15 @@ const groupDataOnNodesAndEdges = (dataSets = [], sourceKey, destinationKey, cont
 
 export function convertBackAnomalies(groupedList) {
   const dict = {};
-  groupedList.forEach(group => {
+  groupedList.forEach((group) => {
     const { duplicates, ...directInfo } = group;
-    duplicates.forEach(d => {
+    duplicates.forEach((d) => {
       dict[d.anomalyId] = dict[d.anomalyId] || [];
       dict[d.anomalyId].push({ directInfo, ...d });
     });
   });
 
-  return Object.keys(dict).map(anomalyId => ({
+  return Object.keys(dict).map((anomalyId) => ({
     id: anomalyId,
     duplicates: dict[anomalyId],
     anomalyData: dict[anomalyId]?.[0]?.anomalyData,
@@ -311,7 +311,7 @@ const clusteriseData = ({ nodes }, clusterBy) => {
 
       n.cluster = JSON.stringify(parentsContext);
 
-      let cluster = root.children.find(c => c.id === n.cluster);
+      let cluster = root.children.find((c) => c.id === n.cluster);
       if (cluster) {
         cluster.children.push(n);
       } else {
@@ -323,7 +323,7 @@ const clusteriseData = ({ nodes }, clusterBy) => {
         });
       }
     } else {
-      let cluster = root.children.find(c => c.id === n.cluster);
+      let cluster = root.children.find((c) => c.id === n.cluster);
       if (cluster) {
         cluster.children.push(n);
       } else {
@@ -346,7 +346,7 @@ export function getDateRange(days, startFlag) {
   if (isNaN(days)) {
     if (days?.length) {
       // custom case when calendar gives us an array [from, to], not amount of days
-      const [fromDate, toDate] = days.map(d => new Date(d).getTime() / 1000);
+      const [fromDate, toDate] = days.map((d) => new Date(d).getTime() / 1000);
       return startFlag ? { startDate: fromDate, endDate: toDate } : { fromDate, toDate };
     }
     return {}; // no values
@@ -359,7 +359,7 @@ export function getDateRange(days, startFlag) {
 }
 
 export const formatDate = (secs, format = 'DD/MM/YYYY') => {
-  const addZero = v => ('0' + v).slice(-2);
+  const addZero = (v) => ('0' + v).slice(-2);
   let d = new Date(secs * 1000);
   let today = new Date();
   const isToday = today.getTime() / 1000 - secs < 86400 && today.getDate() === d.getDate();
@@ -371,7 +371,7 @@ export const formatDate = (secs, format = 'DD/MM/YYYY') => {
   return `${isToday ? ' Today' : date} @ ${hours}`;
 };
 
-export const formatDuration = seconds => {
+export const formatDuration = (seconds) => {
   const minutes = Math.round(seconds / 60);
   if (minutes < 60) {
     return `${minutes} ${getPlural(minutes, 'minute')}`;
@@ -399,8 +399,8 @@ export function getQ(metric, filters = [], stringify) {
 export const manageLinksInCluster = (links, clusterFields, clusterBy) => {
   /* mutate links from child nodes to cluster's center */
   const subConnectionsMap = {};
-  links.forEach(l => {
-    l.endPoints = l.endPoints.map(ep => {
+  links.forEach((l) => {
+    l.endPoints = l.endPoints.map((ep) => {
       const clusterDefinition = JSON.parse(ep);
       delete clusterDefinition[clusterBy];
 
@@ -412,13 +412,13 @@ export const manageLinksInCluster = (links, clusterFields, clusterBy) => {
     subConnectionsMap[l.subConnectionId].push(l);
   });
 
-  return Object.values(subConnectionsMap).map(edges => {
+  return Object.values(subConnectionsMap).map((edges) => {
     if (edges.length > 1) {
-      const duplicates = edges.map(edge => edge.duplicates);
+      const duplicates = edges.map((edge) => edge.duplicates);
       return {
         ...edges[0],
         duplicates: [].concat(...duplicates),
-        hasAnomaly: duplicates.some(d => d.isAnomaly),
+        hasAnomaly: duplicates.some((d) => d.isAnomaly),
       };
     } else {
       return edges[0];

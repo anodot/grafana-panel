@@ -9,7 +9,7 @@ import RadarIcon from '../../Components/RadarIcon';
 import { safeFormat, defaultTopologyTimeFormat } from '../../safeFormat';
 
 const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [], onInvestigateClick, timeFormat }) => {
-  const activeAnomaliesIds = selectedEdge?.anomalies?.map(obj => obj.anomalyId);
+  const activeAnomaliesIds = selectedEdge?.anomalies?.map((obj) => obj.anomalyId);
   const alterList = anomalies.concat(events).sort((a, b) => b.startDate - a.startDate);
   const isFiltrationOn = !selectedEdge?.selectedFromPanel && selectedEdge?.hasAnomaly;
   const { isDark, colors } = useTheme();
@@ -83,7 +83,7 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
   const anomaly = anomalies[0];
   const linkToAnodot = getAnodotLink(searchParams, anomaly.id, anomaly.metricName, urlBase);
   const onClick = useCallback(
-    e => {
+    (e) => {
       e.stopPropagation();
       e.preventDefault();
       const anomalyToSet = {
@@ -91,7 +91,7 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
         anomalies: [
           {
             anomalyId: anomaly.id,
-            affectedEdges: anomaly.edges.map(e => e.connectionId),
+            affectedEdges: anomaly.edges.map((e) => e.connectionId),
           },
         ],
       };
@@ -114,7 +114,7 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
         </div>
         <div className="activeContent">
           <span onClick={onClick}>Show on Map</span>
-          <a target={'_blank'} href={linkToAnodot}>
+          <a target={'_blank'} rel="noreferrer" href={linkToAnodot}>
             Investigate
           </a>
         </div>

@@ -34,9 +34,12 @@ const ChartContainer = ({ onClickEdge }) => {
   const [showModal, setShowModal] = useState(false);
   const [currentDatasetKey, setDatasetKey] = useState('0');
   const { context = [], source, destination, clusterBy } = searchParams;
-  const setSelectedEdge = useCallback(selectedEdge => dispatch({ type: 'setSelectedEdge', selectedEdge }), [dispatch]);
+  const setSelectedEdge = useCallback(
+    (selectedEdge) => dispatch({ type: 'setSelectedEdge', selectedEdge }),
+    [dispatch]
+  );
   const setSelectedNode = useCallback(
-    selectedNode => {
+    (selectedNode) => {
       dispatch({ type: 'setSelectedNode', selectedNode });
       setTimeout(() => setShowModal(true), 0);
     },
@@ -50,7 +53,7 @@ const ChartContainer = ({ onClickEdge }) => {
       /* Manage data for subcluster */
       const callId = Math.floor(Math.random() * 100000);
       const { activeSource, activeDest, name, ...contextFields } = selectedNode;
-      const filters = Object.keys(contextFields).map(key => ({
+      const filters = Object.keys(contextFields).map((key) => ({
         type: 'property',
         key,
         value: contextFields[key] || '*',
@@ -81,11 +84,11 @@ const ChartContainer = ({ onClickEdge }) => {
        */
         /* Case when we request new pre-filtered data */
         dispatch({ type: 'setIsClusterMetricsLoading', isClusterMetricsLoading: true });
-        const metricDataPromisesSource = metrics.map(metric => getMetricsData(metric, filtersSource, urlBase));
-        const metricDataPromisesDest = metrics.map(metric => getMetricsData(metric, filtersDest, urlBase));
+        const metricDataPromisesSource = metrics.map((metric) => getMetricsData(metric, filtersSource, urlBase));
+        const metricDataPromisesDest = metrics.map((metric) => getMetricsData(metric, filtersDest, urlBase));
         const promises = metricDataPromisesSource.concat(metricDataPromisesDest);
 
-        Promise.all(promises).then(results => {
+        Promise.all(promises).then((results) => {
           dispatch({ type: 'setIsClusterMetricsLoading', isClusterMetricsLoading: false });
           const clusterMetricsData = convertMetricsDataToSubTopology(results, selectedNode, clusterBy); // returns { node, edges }
           clusterMetricsData.callId = callId;
@@ -94,7 +97,7 @@ const ChartContainer = ({ onClickEdge }) => {
       }
 
       if (score !== undefined && timeInterval !== undefined && timeScales !== undefined) {
-        const resolution = timeScales?.map(t => t?.meta[2]).join(',');
+        const resolution = timeScales?.map((t) => t?.meta[2]).join(',');
         const durationUnit = timeScales[0]?.meta?.slice(0, 2);
         const params = {
           score: score / 100,
@@ -104,7 +107,7 @@ const ChartContainer = ({ onClickEdge }) => {
           durationUnit: durationUnit[1],
           sort: sortAnomaly,
         };
-        const anomalyDataPromisesSource = metrics.map(metric => {
+        const anomalyDataPromisesSource = metrics.map((metric) => {
           const sourceParams = {
             ...params,
             filters: [
@@ -120,7 +123,7 @@ const ChartContainer = ({ onClickEdge }) => {
           };
           return loadAnomalyData(sourceParams, urlBase);
         });
-        const anomalyDataPromisesDest = metrics.map(metric => {
+        const anomalyDataPromisesDest = metrics.map((metric) => {
           const destParams = {
             ...params,
             filters: [
@@ -137,7 +140,7 @@ const ChartContainer = ({ onClickEdge }) => {
           return loadAnomalyData(destParams, urlBase);
         });
         dispatch({ type: 'isSubAnomalyLoading', value: true });
-        Promise.all(anomalyDataPromisesDest.concat(anomalyDataPromisesSource)).then(results => {
+        Promise.all(anomalyDataPromisesDest.concat(anomalyDataPromisesSource)).then((results) => {
           const activeDatasets = metrics.map((metric, i) => ({ metric, dataSet: results[i] || [] }));
           const subAnomalyData = convertAnomaliesToEdges(activeDatasets, source, destination, [...context, clusterBy]); // returns { node, edges }
           subAnomalyData.topologyAnomalyData.edgesCollection = manageLinksInCluster(
@@ -213,7 +216,7 @@ const ChartContainer = ({ onClickEdge }) => {
         [<span className="green">{activeSource}</span> or <span className="green">{activeDest}</span>]:{' '}
         <b>{selectedNode?.name}</b>
       </div>
-      {Object.keys(contextFields || {}).map(key => (
+      {Object.keys(contextFields || {}).map((key) => (
         <div key={key}>
           <span className="green">{key}</span>: {selectedNode?.[key]}
         </div>

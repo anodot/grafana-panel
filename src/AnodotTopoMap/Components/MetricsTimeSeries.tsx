@@ -27,8 +27,8 @@ const ellipsedStyles = css`
   cursor: pointer;
 `;
 
-const multiplyX = a =>
-  a.map(b => {
+const multiplyX = (a) =>
+  a.map((b) => {
     const [x, ...rest] = b;
     return [x * 1000, ...rest];
   });
@@ -43,7 +43,7 @@ export const MetricsTSList = ({ metricsParams }) => {
   useEffect(() => {
     setIsLoading(true);
     setShift(3);
-    const metricTimeSeriesPromises = metricsParams.map(params =>
+    const metricTimeSeriesPromises = metricsParams.map((params) =>
       loadMetricsTimeSeries(
         params,
         {
@@ -54,7 +54,7 @@ export const MetricsTSList = ({ metricsParams }) => {
       )
     );
 
-    Promise.all(metricTimeSeriesPromises).then(results => {
+    Promise.all(metricTimeSeriesPromises).then((results) => {
       dispatch({ type: 'setMetricsTimeSeries', value: results });
       setIsLoading(false);
     });
@@ -62,7 +62,7 @@ export const MetricsTSList = ({ metricsParams }) => {
     /* eslint-disable-next-line  react-hooks/exhaustive-deps */
   }, [timeScales, timeInterval, metricsParams.id, dispatch]);
 
-  const metricsTimeSeriesJoined = [].concat(...metricsTimeSeries).filter(d => !!d?.dataPoints?.length);
+  const metricsTimeSeriesJoined = [].concat(...metricsTimeSeries).filter((d) => !!d?.dataPoints?.length);
 
   const dataLength = metricsTimeSeriesJoined.length;
 
@@ -72,7 +72,7 @@ export const MetricsTSList = ({ metricsParams }) => {
     </div>
   ) : metricsTimeSeriesJoined.length > 0 ? (
     <div>
-      {metricsTimeSeriesJoined.slice(0, shift).map(record => (
+      {metricsTimeSeriesJoined.slice(0, shift).map((record) => (
         <MetricsChartTile key={record?.id} metric={record} metricsParams={metricsParams} />
       ))}
       {shift < dataLength && (

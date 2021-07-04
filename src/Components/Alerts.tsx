@@ -3,9 +3,10 @@ import React from 'react';
 import { VisOptions } from 'types';
 import { css, cx } from 'emotion';
 import { useTheme } from '@grafana/ui';
+// import { getDataSourceSrv } from '@grafana/runtime';
 import { getAlertsAnodotLink } from '../helpers';
 import isToday from 'date-fns/isToday';
-import { safeFormat, defaultTimeFormat } from '../safeFormat';
+import { defaultTimeFormat, safeFormat } from '../safeFormat';
 
 const wrapperS = css`
   overflow: auto;
@@ -30,19 +31,24 @@ const tableStyles = css`
     &.critical {
       background-color: #d10f37;
     }
+
     &.high {
       background-color: #f9771f;
     }
+
     &.medium {
       background-color: #ffbe2f;
     }
+
     &.low {
       background-color: #41ca5a;
     }
+
     &.info {
       background-color: #00b7f1;
     }
   }
+
   .name {
     text-align: left;
     padding: 6px 20px;
@@ -57,13 +63,22 @@ const tableStyles = css`
 const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
   const { colors, isDark } = useTheme();
   const {
-    anodotPayload: { alerts, urlBase },
+    anodotPayload: { alerts, urlBase, testCallback },
   } = serie;
 
-  const getAlertNode = alert => {
+  // useEffect(() => {
+  //   const an = getDataSourceSrv();
+  //   an.get('bc-test-Anodot-28-06').then(dataSource => {
+  //     const me = dataSource.getMe(); //
+  //     console.log('66|Then: ', me, '#');
+  //     me.then(m => console.log('69|Alerts: ', m, '#'));
+  //   });
+  // }, []);
+
+  const getAlertNode = (alert) => {
     const postfix = alert.type === 'static' ? ' (Static)' : alert.type === 'noData' ? ' (No Data)' : '';
     return alert.type === 'anomaly' ? (
-      <a target="_blank" href={getAlertsAnodotLink(alert, urlBase)}>
+      <a target="_blank" rel="noreferrer" href={getAlertsAnodotLink(alert, urlBase)}>
         {alert.title + postfix}
       </a>
     ) : (
@@ -71,7 +86,7 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
     );
   };
 
-  const getAlertCells = alert => {
+  const getAlertCells = (alert) => {
     const formattedStartDateFull = safeFormat(alert.startTime, defaultTimeFormat);
     const isTodayFormat = isToday(alert.startTime * 1000) ? 'HH:mm' : 'MMM dd';
     const formattedStartDateShort = safeFormat(
@@ -106,6 +121,7 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
               background-color: ${colors.bg2};
               border-color: ${colors.bg1};
             }
+
             td {
               border-color: ${isDark ? colors.bg1 : colors.bg3};
             }
@@ -123,7 +139,7 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
             </tr>
           </thead>
           <tbody>
-            {alerts?.map(alert => (
+            {alerts?.map((alert) => (
               <tr key={alert.id}>{getAlertCells(alert)}</tr>
             ))}
           </tbody>

@@ -12,8 +12,15 @@ import './topomap.css';
 
 const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options }) => {
   const [{}, dispatch] = useContext(ReducerContext);
-  const { metrics = [], anomalies = [], query = {}, callId, urlBase, propertiesOptions, events } =
-    serie?.anodotPayload || {};
+  const {
+    metrics = [],
+    anomalies = [],
+    query = {},
+    callId,
+    urlBase,
+    propertiesOptions,
+    events,
+  } = serie?.anodotPayload || {};
   const { source, destination, context } = query;
 
   useEffect(() => {
@@ -47,7 +54,7 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
   }, [callId, metrics, anomalies, source, destination, dispatch, context]);
 
   const onClickEdge = useCallback(
-    edge => {
+    (edge) => {
       if (!edge) {
         dispatch({ type: 'setSelectedEdge', selectedEdge: null });
         return;
@@ -63,7 +70,7 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
         actions,
       });
 
-      const uniqueRecordsParams = uniqBy(edge.duplicates, d => d.metric + d.from + d.to).map(d => {
+      const uniqueRecordsParams = uniqBy(edge.duplicates, (d) => d.metric + d.from + d.to).map((d) => {
         const from = { key: edge.activeSource, value: JSON.parse(d.from)[edge.activeSource] };
         const to = { key: edge.activeDest, value: JSON.parse(d.to)[edge.activeDest] };
         return { metric: d.metric, from, to };
@@ -73,10 +80,10 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
     [dispatch]
   );
 
-  const getTimeSeries = useCallback(edge => {}, []);
+  const getTimeSeries = useCallback((edge) => {}, []);
 
   const onInvestigateClick = useCallback(
-    anomalies => {
+    (anomalies) => {
       dispatch({
         type: 'bulk',
         actions: [
@@ -114,8 +121,10 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
   );
 };
 
-export default props => (
+const ContextWrapper = (props) => (
   <ReducerContextProvider>
     <TopoMapContainer {...props} />
   </ReducerContextProvider>
 );
+
+export default ContextWrapper;

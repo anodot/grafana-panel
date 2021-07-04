@@ -32,8 +32,8 @@ const ellipsedStyles = css`
   cursor: pointer;
 `;
 
-const multiplyX = a =>
-  a.map(b => {
+const multiplyX = (a) =>
+  a.map((b) => {
     const [x, ...rest] = b;
     return [x * 1000, ...rest];
   });
@@ -45,7 +45,7 @@ export const AnomalyTSList = () => {
 
   return (
     <div>
-      {investigateAnomalies.slice(0, shift).map(anomaly => (
+      {investigateAnomalies.slice(0, shift).map((anomaly) => (
         <AnomalyDetailsTile urlBase={urlBase} key={anomaly.id + anomaly.metricName} anomaly={anomaly} />
       ))}
       {shift < investigateAnomalies.length && (
@@ -88,7 +88,7 @@ const AnomalyDetailsTile = ({ anomaly, urlBase }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    loadAnomaliesTimeSeries(anomaly, urlBase).then(data => {
+    loadAnomaliesTimeSeries(anomaly, urlBase).then((data) => {
       setTimeSeriesData(data);
       setIsLoading(false);
     });

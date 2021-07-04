@@ -43,13 +43,15 @@ interface SearchPanelProps extends HTMLProps<HTMLDivElement> {
   onInvestigateClick: () => void;
 }
 
-const SearchPanel: React.FC<SearchPanelProps> = props => {
+const SearchPanel: React.FC<SearchPanelProps> = (props) => {
   const { isDark } = useTheme();
-  const [{ anomalyData, isAnomaliesLoading, selectedEdge, events, isTimeLineOpened }, dispatch] = useContext(
-    ReducerContext
-  );
+  const [{ anomalyData, isAnomaliesLoading, selectedEdge, events, isTimeLineOpened }, dispatch] =
+    useContext(ReducerContext);
 
-  const setSelectedEdge = useCallback(selectedEdge => dispatch({ type: 'setSelectedEdge', selectedEdge }), [dispatch]);
+  const setSelectedEdge = useCallback(
+    (selectedEdge) => dispatch({ type: 'setSelectedEdge', selectedEdge }),
+    [dispatch]
+  );
   return (
     <div className={wrapperStyles}>
       <div className={tabsIcons}>

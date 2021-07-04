@@ -115,7 +115,7 @@ const nodeStrokeByGroup = (d, colorsTheme) => {
 const updateView = (container, { x, y, k }) => {
   container.attr('transform', `translate(${x}, ${y}) scale(${k})`);
 
-  const nodes = container.selectAll('.node').filter(d => d.data.type === 'node');
+  const nodes = container.selectAll('.node').filter((d) => d.data.type === 'node');
   nodes.style('visibility', k < NODE_ZOOM_LEVEL ? 'hidden' : 'visible');
   nodes.select('text').style('visibility', k < LABEL_ZOOM_LEVEL ? 'hidden' : 'visible');
 
@@ -135,11 +135,11 @@ const createPack = (data, size) =>
     .padding(800)(
     d3
       .hierarchy(data)
-      .sum(d => d.value)
+      .sum((d) => d.value)
       .sort((a, b) => b.value - a.value)
   );
 
-const getScreenDimentions = svg => ({
+const getScreenDimentions = (svg) => ({
   width: parseInt(svg.attr('width'), 10),
   height: parseInt(svg.attr('height'), 10),
 });
@@ -185,10 +185,7 @@ const initSvg = (svg, isZoomed) => {
   if (isZoomed) {
     const onZoom = () => updateView(container, d3.event['transform']);
 
-    const svgZoom = d3
-      .zoom()
-      .scaleExtent([MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL])
-      .on('zoom', onZoom);
+    const svgZoom = d3.zoom().scaleExtent([MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL]).on('zoom', onZoom);
 
     const transform = d3.zoomIdentity.scale(0.4);
     svg.call(svgZoom);
@@ -209,8 +206,8 @@ const highlightNode = (d, svg, colorsTheme) => {
       .select('path')
       .transition()
       .duration(300)
-      .style('fill', d => nodeFillByGroup(d, colorsTheme))
-      .style('stroke', d => nodeStrokeByGroup(d, colorsTheme));
+      .style('fill', (d) => nodeFillByGroup(d, colorsTheme))
+      .style('stroke', (d) => nodeStrokeByGroup(d, colorsTheme));
 
     // const selectedLinks = svg.selectAll('.link.selected');
     // selectedLinks.classed('selected', false);
@@ -232,8 +229,8 @@ const highlightNode = (d, svg, colorsTheme) => {
     .select('path')
     .transition()
     .duration(300)
-    .style('fill', d => nodeStrokeByGroup(d, colorsTheme))
-    .style('stroke', d => nodeFillByGroup(d, colorsTheme));
+    .style('fill', (d) => nodeStrokeByGroup(d, colorsTheme))
+    .style('stroke', (d) => nodeFillByGroup(d, colorsTheme));
 
   // let links = svg.selectAll(`[from-id='${d.data.nodeId}'],[to-id='${d.data.nodeId}']`);
   //
@@ -252,23 +249,23 @@ const highlightNode = (d, svg, colorsTheme) => {
 };
 
 const renderClusters = ({ svg, nodes, colorsTheme }) => {
-  const clusterData = nodes.filter(node => node.data.type === 'cluster');
+  const clusterData = nodes.filter((node) => node.data.type === 'cluster');
   const allClusters = svg
     .select('.cluster-layer')
     .selectAll('.clusters')
-    .data(clusterData, function(d) {
+    .data(clusterData, function (d) {
       return d ? d.data.id : this['cluster-id'];
     });
 
   const entered = allClusters
     .enter()
     .append('g')
-    .attr('cluster-id', d => d.data.id)
+    .attr('cluster-id', (d) => d.data.id)
     .classed('cluster', true);
 
   entered
     .append('circle')
-    .attr('r', d => d.r * CLUSTER_SIZE_FACTOR)
+    .attr('r', (d) => d.r * CLUSTER_SIZE_FACTOR)
     .style('stroke-width', 1)
     .style('stroke', colorsTheme.clusterStroke)
     .style('fill', colorsTheme.clusterFill);
@@ -287,9 +284,9 @@ const renderClusters = ({ svg, nodes, colorsTheme }) => {
 
   entered
     .merge(allClusters)
-    .attr('transform', d => `translate(${d.x},${d.y})`)
-    .on('mouseenter', d => showTooltip(d.data.nodeData, svg, colorsTheme, 'cluster-tooltip'))
-    .on('mouseleave', d => showTooltip(null, svg, colorsTheme));
+    .attr('transform', (d) => `translate(${d.x},${d.y})`)
+    .on('mouseenter', (d) => showTooltip(d.data.nodeData, svg, colorsTheme, 'cluster-tooltip'))
+    .on('mouseleave', (d) => showTooltip(null, svg, colorsTheme));
 
   allClusters.exit().remove();
 };
@@ -341,24 +338,24 @@ function createNode(d, g, displayName = 'name', colorsTheme) {
 }
 
 const renderNodes = ({ svg, nodes, onClickNode, displayName, colorsTheme }) => {
-  const nodeData = nodes.filter(node => node.data.type === 'node');
+  const nodeData = nodes.filter((node) => node.data.type === 'node');
   const allNodes = svg
     .select('.node-layer')
     .selectAll('.node')
-    .data(nodeData, d => d.data.nodeId);
+    .data(nodeData, (d) => d.data.nodeId);
 
   const entered = allNodes
     .enter()
     .append('g')
-    .attr('node-id', d => d.data.nodeId)
+    .attr('node-id', (d) => d.data.nodeId)
     .classed('node', true);
   entered
-    .each(function(d) {
+    .each(function (d) {
       createNode(d, d3.select(this), displayName, colorsTheme);
     })
-    .on('mouseenter', d => highlightNode(d, svg, colorsTheme))
+    .on('mouseenter', (d) => highlightNode(d, svg, colorsTheme))
     .on('mouseleave', () => highlightNode(null, svg, colorsTheme))
-    .on('click', function(d) {
+    .on('click', function (d) {
       d3.event.preventDefault();
       d3.event.stopPropagation();
       onClickNode?.(d.data.nodeData);
@@ -367,38 +364,25 @@ const renderNodes = ({ svg, nodes, onClickNode, displayName, colorsTheme }) => {
       // addPatchToNode(d, d3.select(this), svg, svgZoom);
     });
 
-  entered.merge(allNodes).attr('transform', d => `translate(${d.x},${d.y})`);
+  entered.merge(allNodes).attr('transform', (d) => `translate(${d.x},${d.y})`);
 
   allNodes.exit().remove();
 };
 
-const addPatchToNode = function(d, g, svg, svgZoom) {
+const addPatchToNode = function (d, g, svg, svgZoom) {
   const { width, height, x, y } = g.node().getBBox();
   // const { x, y } = d;
   //  g.append('text')
   //      .text(d => "ADDED");
-  g.append('circle')
-    .attr('r', 10)
-    .classed('patch', true)
-    .attr('cx', -25);
-  g.append('circle')
-    .attr('r', 10)
-    .classed('patch', true)
-    .attr('cx', 0);
-  g.append('circle')
-    .attr('r', 10)
-    .classed('patch', true)
-    .attr('cx', 25);
-  g.append('circle')
-    .attr('r', 100)
-    .classed('patch', true)
-    .attr('fill', 'none')
-    .attr('stroke', 'darkgreen');
+  g.append('circle').attr('r', 10).classed('patch', true).attr('cx', -25);
+  g.append('circle').attr('r', 10).classed('patch', true).attr('cx', 0);
+  g.append('circle').attr('r', 10).classed('patch', true).attr('cx', 25);
+  g.append('circle').attr('r', 100).classed('patch', true).attr('fill', 'none').attr('stroke', 'darkgreen');
 
   // zoomOnRect({ svg, svgZoom, rect: getRect({ x, y, width, height })})
 };
 
-const linkPath = link => {
+const linkPath = (link) => {
   const { fX, fY, tX, tY, fW, tW, endCorrection } = link;
   const dX = tX - fX;
   const dY = tY - fY;
@@ -434,14 +418,14 @@ const linkPath = link => {
 const processLinks = ({ nodes, links, svg }) => {
   const aggregated = {};
 
-  const getWidth = id => {
+  const getWidth = (id) => {
     const node = svg.select(`[node-id='${id}']`);
     return parseInt(node.select('rect').attr('width'), 10);
   };
 
   const mapLink = (link, index) => {
-    const from = nodes.find(node => node.data.nodeId === link.endPoints[0]);
-    const to = nodes.find(node => node.data.nodeId === link.endPoints[1]);
+    const from = nodes.find((node) => node.data.nodeId === link.endPoints[0]);
+    const to = nodes.find((node) => node.data.nodeId === link.endPoints[1]);
     if (!from || !to) {
       return {};
     }
@@ -487,12 +471,12 @@ const renderLinks = ({ svg, links, isSubchart, onClickEdge, colorsTheme }) => {
   //   .domain([times[0], times[times.length - 1]])
   //   .range(['orange', 'red']);
   const layer = svg.select('.link-layer');
-  const allLinks = layer.selectAll('.link').data(links, d => (isSubchart ? d.subConnectionId : d.connectionId));
+  const allLinks = layer.selectAll('.link').data(links, (d) => (isSubchart ? d.subConnectionId : d.connectionId));
   const entered = allLinks
     .enter()
     .append('g')
     .classed('edge-group', true)
-    .on('click', d => {
+    .on('click', (d) => {
       d3.event.preventDefault();
       d3.event.stopPropagation();
       onClickEdge(d);
@@ -505,12 +489,12 @@ const renderLinks = ({ svg, links, isSubchart, onClickEdge, colorsTheme }) => {
   entered
     .append('path')
     .classed('visual-path', true)
-    .classed('neutral-edge', d => !d.hasAnomaly)
-    .classed('anomaly-edge', d => d.hasAnomaly)
-    .style('stroke', d => (d.latestAnomalyTime ? '#ff7777' : colorsTheme.linkNeutralStroke)) //colorScale(d.latestAnomalyTime)
+    .classed('neutral-edge', (d) => !d.hasAnomaly)
+    .classed('anomaly-edge', (d) => d.hasAnomaly)
+    .style('stroke', (d) => (d.latestAnomalyTime ? '#ff7777' : colorsTheme.linkNeutralStroke)) //colorScale(d.latestAnomalyTime)
     .style('stroke-width', 2)
-    .attr('connection-id', d => d.connectionId)
-    .attr('anomalies', d => d.anomalies?.map(a => a.anomalyId).join('-'))
+    .attr('connection-id', (d) => d.connectionId)
+    .attr('anomalies', (d) => d.anomalies?.map((a) => a.anomalyId).join('-'))
     .attr('d', linkPath);
 
   entered
@@ -554,7 +538,7 @@ const showTooltip = (data, svg, colorsTheme, className = '') => {
   }
   let info = {};
   if (data.isAnomaly) {
-    const uniqAnomalies = uniq(data.anomalies.map(a => a.anomalyId)); // it can have duplication
+    const uniqAnomalies = uniq(data.anomalies.map((a) => a.anomalyId)); // it can have duplication
     info[`${uniqAnomalies.length} anomalies`] = '';
     // data.anomalies.forEach(a => {
     //   info[a.anomalyId] = '';
@@ -570,14 +554,8 @@ const showTooltip = (data, svg, colorsTheme, className = '') => {
 
   if (!tooltip.node()) {
     const path = getTooltipPath(TOOLTIP_WIDTH, Math.max(40, 30 + rowsAmount * 20));
-    tooltip = svg
-      .append('g')
-      .classed('node-tooltip', true)
-      .classed(className, true);
-    tooltip
-      .append('path')
-      .attr('d', path)
-      .attr('fill', colorsTheme.tooltipFill);
+    tooltip = svg.append('g').classed('node-tooltip', true).classed(className, true);
+    tooltip.append('path').attr('d', path).attr('fill', colorsTheme.tooltipFill);
 
     const text = tooltip
       .append('text')
@@ -632,10 +610,7 @@ const showAnomalyTooltip = (data, svg, colorsTheme) => {
     const pos = -140;
     const path = getTooltipPath(300, 150);
     tooltip = svg.append('g').classed('anomaly-tooltip', true);
-    tooltip
-      .append('path')
-      .attr('d', path)
-      .attr('fill', colorsTheme.tooltipFill);
+    tooltip.append('path').attr('d', path).attr('fill', colorsTheme.tooltipFill);
     tooltip
       .append('text')
       .classed('anomaly-source', true)
@@ -700,7 +675,7 @@ const highlightAnomaly = (anomaly, ref, svgZoom) => {
     // let rectangles = []; // For the next zooming in
     anomaly.anomalies.forEach(({ affectedEdges }) => {
       /* Highlight all related anomalies and edges */
-      affectedEdges.forEach(connectionId => {
+      affectedEdges.forEach((connectionId) => {
         let path = svg.select(`[connection-id='${connectionId}'`);
         path.classed('highlighted-edge', true);
         // anomaly?.selectedFromPanel && rectangles.push(getLinkRect(path.datum()))
@@ -779,7 +754,7 @@ const TopologyMap = ({
   }, [svgRef, svgData, initialized]);
 
   const renderData = useCallback(
-    data => {
+    (data) => {
       const { root, links } = data;
       const svg = d3.select(svgRef.current);
       const size = isSubchart ? [1200, 1200] : [2000, 2000];
@@ -819,7 +794,7 @@ const TopologyMap = ({
   }, [selectedEdge, dataTimeStamp, svgData.svgZoom]);
 
   const onSvgClick = useCallback(
-    e => {
+    (e) => {
       onClickMap && onClickMap(e);
       highlightNode(null, d3.select(svgRef.current), isDark ? lightColors : darkColors);
       //onHoverEdge(null);

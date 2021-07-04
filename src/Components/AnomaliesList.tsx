@@ -35,7 +35,7 @@ const Secondary = ({ children }) => (
 
 const AnomaliesList: React.FC<VisOptions> = ({ serie, height }) => {
   const theme = useTheme();
-  const anomaliesDatasets = serie?.anodotPayload?.anomalies?.map(a => a.dataSet);
+  const anomaliesDatasets = serie?.anodotPayload?.anomalies?.map((a) => a.dataSet);
   if (!anomaliesDatasets?.length) {
     return <div>No data for anomalies list or chart</div>;
   }
@@ -51,7 +51,7 @@ const AnomaliesList: React.FC<VisOptions> = ({ serie, height }) => {
         `
       )}
     >
-      {anomalies?.map(anomaly => (
+      {anomalies?.map((anomaly) => (
         <a
           key={anomaly.id}
           // target="_blank"

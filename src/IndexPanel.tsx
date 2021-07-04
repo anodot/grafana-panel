@@ -3,21 +3,20 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { PanelOptions } from 'types';
 import { css, cx, injectGlobal } from 'emotion';
-import { LoadingPlaceholder, stylesFactory } from '@grafana/ui';
+import { LoadingPlaceholder, stylesFactory, useTheme } from '@grafana/ui';
 import CompositeMetricsCharts from './Components/CompositeMetricsCharts';
 import AnomaliesCharts from './Components/AnomaliesCharts';
 import AnomaliesList from './Components/AnomaliesList';
 import Alerts from './Components/Alerts';
 import AnodotTopoMap from './AnodotTopoMap/index.tsx';
 import ErrorBoundary from './Components/ErrorBoundary.tsx';
-import { useTheme } from '@grafana/ui';
 import AnodotLogoSvg from './Components/AnodotLogoComponent';
 
 import './common.css';
 
 interface Props extends PanelProps<PanelOptions> {}
 
-export const Panel: React.FC<Props> = props => {
+export const Panel: React.FC<Props> = (props) => {
   const { width, height, data, options } = props;
   const styles = getStyles();
   const theme = useTheme();
@@ -61,7 +60,7 @@ export const Panel: React.FC<Props> = props => {
         </div>
       ) : (
         <ErrorBoundary>
-          {data.series.map(serie => {
+          {data.series.map((serie) => {
             switch (serie.serieName) {
               case 'metricsComposite':
                 return <CompositeMetricsCharts serie={serie} {...defaultVisProps} />;

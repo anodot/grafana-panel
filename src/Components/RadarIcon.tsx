@@ -10,7 +10,7 @@ const RadarIcon = () => (
         />
       </filter>
     </defs>
-    <g fill="none" fill-rule="evenodd">
+    <g fill="none" fillRule="evenodd">
       <g filter="url(#21ni9avxza)" transform="translate(-74 -146)">
         <g>
           <path

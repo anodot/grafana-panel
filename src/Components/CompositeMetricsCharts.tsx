@@ -43,7 +43,7 @@ const ColorLabel = ({ color }) => (
   />
 );
 
-const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, options, options }) => {
+const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, options }) => {
   const { isDark } = useTheme();
   const { meta, metricsComposite, showMultiline, timeInterval } = serie.anodotPayload;
   let metrics = metricsComposite;
@@ -72,7 +72,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
       )}
     >
       <h5>{meta.metricName}</h5>
-      {meta.dimensions.map(d => (
+      {meta.dimensions.map((d) => (
         <h6 key={d.key}>
           <b>{d.key}</b>: <i>{d.value}</i>
         </h6>

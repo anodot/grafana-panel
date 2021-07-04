@@ -40,7 +40,7 @@ const CustomModal = ({ visible, children, width = 300, height = 300, zIndex, onC
           min-height: ${height}px;
           left: 340px; //calc(50% - ${width / 2}px);
           z-index: ${zIndex || 9999};
-          background: ${theme.isDark ? '#202226' : '#fff'}
+          background: ${theme.isDark ? '#202226' : '#fff'};
         `
       )}
     >

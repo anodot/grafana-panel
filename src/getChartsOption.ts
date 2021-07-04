@@ -64,7 +64,7 @@ export function getChartsOptions({
       enabled: true,
       useHTML: true,
       crosshairs: true,
-      formatter: function() {
+      formatter: function () {
         const {
           zone: { anomaly },
           series,
@@ -198,7 +198,7 @@ export function getChartsOptions({
     ];
     const otherZones = [];
 
-    otherAnomalys.forEach(a => {
+    otherAnomalys.forEach((a) => {
       otherZones.push({
         value: a.startDate * 1000,
         className: 'neutral-line',
@@ -218,8 +218,8 @@ export function getChartsOptions({
   return config;
 }
 
-export const multiplyX = a =>
-  a.map(b => {
+export const multiplyX = (a) =>
+  a.map((b) => {
     const [x, ...rest] = b;
     return [x * 1000, ...rest];
   });
