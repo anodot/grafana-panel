@@ -29,6 +29,5 @@ yarn build
 ```
 
 ## Learn more
+- [Valid Time Formats](https://github.com/anodot/grafana-panel/wiki/Valid-Time-Formats)
 - [Grafana documentation](https://grafana.com/docs/)
-- [Grafana Tutorials](https://grafana.com/tutorials/) - Grafana Tutorials are step-by-step guides that help you make the most of Grafana
-- [Grafana UI Library](https://developers.grafana.com/ui) - UI components to help you build interfaces using Grafana Design System

@@ -5,9 +5,9 @@ import { Panel } from './IndexPanel';
 export const plugin = new PanelPlugin<PanelOptions>(Panel).setPanelOptions(builder => {
   return builder.addTextInput({
     path: 'timeFormat',
-    name: 'Time format (date-fns)',
+    name: 'Time format',
     description:
-      'Optional time format for time labels. You can overwrite default value with any valid date-fns library format. (E.g. "eee, MMM d @ hh:mm a")',
+      'Any valid time format to overwrite time labels. (E.g. "eee, MMM d @ hh:mm a"). See https://github.com/anodot/grafana-panel/wiki/Valid-Time-Formats',
     defaultValue: '',
   });
 });
