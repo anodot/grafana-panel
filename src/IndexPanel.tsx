@@ -21,7 +21,7 @@ export const Panel: React.FC<Props> = (props) => {
   const styles = getStyles();
   const theme = useTheme();
   const isLoading = props?.data.state === 'Loading';
-  console.log('25|IndexPanel: ', data, '#');
+
   if (!theme.isDark) {
     /* Fix Grafana Tooltip's bug - it is indifferent to the light theme */
     /* eslint-disable-next-line  @typescript-eslint/no-unused-expressions */
