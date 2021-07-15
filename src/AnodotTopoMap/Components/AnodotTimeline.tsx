@@ -7,6 +7,7 @@ import { getAnodotLink } from '../makeParams';
 import { ReducerContext } from '../reducer_context';
 import RadarIcon from '../../Components/RadarIcon';
 import { safeFormat, defaultTopologyTimeFormat } from '../../safeFormat';
+import { getAnalytics } from '../../helpers';
 
 const AnodotTimeline = ({ anomalies, selectedEdge, setSelectedEdge, events = [], onInvestigateClick, timeFormat }) => {
   const activeAnomaliesIds = selectedEdge?.anomalies?.map((obj) => obj.anomalyId);
@@ -81,7 +82,7 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
   const { isDark } = useTheme();
   const [{ searchParams, urlBase }] = useContext(ReducerContext);
   const anomaly = anomalies[0];
-  const linkToAnodot = getAnodotLink(searchParams, anomaly.id, anomaly.metricName, urlBase);
+  const anomalyInvestigateLink = getAnodotLink(searchParams, anomaly.id, anomaly.metricName, urlBase);
   const onClick = useCallback(
     (e) => {
       e.stopPropagation();
@@ -97,8 +98,14 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
       };
       const isSame = isEqual(selectedEdge, anomalyToSet);
       setSelectedEdge(isSame ? null : anomalyToSet);
+      getAnalytics({ category: 'Topology: Show on map' })();
     },
     [anomaly, selectedEdge, setSelectedEdge]
+  );
+
+  const onAlertClickSegmentClb = useCallback(
+    getAnalytics({ link: anomalyInvestigateLink, category: 'Topology: Investigate click' }),
+    [anomalyInvestigateLink]
   );
 
   return (
@@ -114,7 +121,7 @@ const AnomalyCard = ({ startDate, anomalies, isActive, setSelectedEdge, selected
         </div>
         <div className="activeContent">
           <span onClick={onClick}>Show on Map</span>
-          <a target={'_blank'} rel="noreferrer" href={linkToAnodot}>
+          <a target={'_blank'} rel="noreferrer" onClick={onAlertClickSegmentClb} href={anomalyInvestigateLink}>
             Investigate
           </a>
         </div>
@@ -173,7 +180,7 @@ const cardStyles = css`
   font-size: 10px;
   border-radius: 6px;
   display: flex;
-  flex-wrap: no-wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
   font-size: 14px;
   color: #3d4c59;

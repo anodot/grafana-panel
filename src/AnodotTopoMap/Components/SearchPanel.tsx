@@ -5,6 +5,7 @@ import { Spinner, useTheme } from '@grafana/ui';
 import AnodotTimeline from './AnodotTimeline';
 import { ReducerContext } from '../reducer_context';
 import TimeLineIcon from '../../Components/TimeLineLogoComponent';
+import { getAnalytics } from '../../helpers';
 
 const wrapperStyles = css`
   position: absolute;
@@ -60,7 +61,10 @@ const SearchPanel: React.FC<SearchPanelProps> = (props) => {
             cursor: pointer;
             opacity: ${isTimeLineOpened ? '1' : '0.6'};
           `}
-          onClick={() => dispatch({ type: 'setOpenTimeLine', value: !isTimeLineOpened })}
+          onClick={() => {
+            getAnalytics({ category: `Topology: ${!isTimeLineOpened ? 'open' : 'close'} TimeLine` })();
+            dispatch({ type: 'setOpenTimeLine', value: !isTimeLineOpened });
+          }}
         >
           <TimeLineIcon isDark={isDark} />
         </div>

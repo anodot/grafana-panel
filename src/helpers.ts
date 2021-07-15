@@ -60,10 +60,8 @@ export function getAlertsAnodotLink(alert, urlBase) {
     groupId,
     startTime,
     endTime,
-    duration,
     timeScale,
     alertConfigurationId, // Alert for the group containing anomaly
-    id, // Alert for the specific anomaly
     formatted: { score },
   } = alert;
   const durationScale = timescaleToDurationScaleMap[timeScale];
@@ -101,3 +99,13 @@ export function getAlertsAnodotLink(alert, urlBase) {
   const link = Object.keys(params).reduce(format, '');
   return url + link;
 }
+
+export const getAnalytics = (obj = { category: '' }) => {
+  const data = {
+    ref: 'grafana',
+    source: 'anodot-panel',
+    userAgent: window?.navigator?.userAgent,
+    ...obj,
+  };
+  return () => analytics?.track('grafana', data);
+};

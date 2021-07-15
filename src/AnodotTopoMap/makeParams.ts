@@ -179,33 +179,44 @@ export function makeMetricTimeSeriesParams(
 }
 
 export function getAnodotLink(query, anomalyId, metric, urlBase) {
-  const { timeScales, timeInterval, score, duration, filters, deltaValue, deltaType, showEvents, sortBy, direction } =
-    query;
+  const {
+    timeScales,
+    timeInterval,
+    score,
+    duration,
+    filters,
+    deltaValue,
+    deltaType,
+    showEvents,
+    sortBy,
+    direction,
+    constRange, // TODO: add from datasource ? E.g: '1w(1w)'
+  } = query;
 
   const encodedExpression = encodeURIComponent(b64EncodeUnicode(JSON.stringify(getQ(metric, filters)?.expression)));
-  const toLiteral = (value) => `${value}(${value})`;
+  const toLiteral = value => `${value}(${value})`;
   const params = {
     anomalies: `0(${anomalyId})`,
-    duration: toLiteral(duration),
+    duration: '1(1)', // toLiteral(duration),
     durationScale: toLiteral(timeScales[0]?.meta?.[1]),
     delta: toLiteral(deltaValue),
     deltaType: toLiteral(deltaType),
     resolution: toLiteral(timeScales[0]?.meta?.[2]),
     score: toLiteral(score[0]),
-    bookmark: '()',
-    anomalyType: 'all(all)',
-    correlation: '()',
     state: 'both(both)',
-    showEvents: toLiteral(showEvents),
-    eventsQuery: '()',
     direction: toLiteral(direction.length === 1 ? direction[0]?.value : 'both'),
     alertId: '()',
     sort: toLiteral(sortBy),
-    order: 'desc(desc)',
     q: toLiteral(encodedExpression),
-    constRange: '1w(1w)', // TODO: add from datasource
-    startDate: toLiteral(timeInterval.startDate),
-    endDate: toLiteral(timeInterval.endDate),
+    constRange: constRange || '1h(c)', //'1w(1w)',
+    startDate: `${timeInterval.startDate}(0)`,
+    endDate: `${timeInterval.endDate}(0)`,
+    bookmark: '()',
+    anomalyType: 'all(all)',
+    correlation: '()',
+    showEvents: toLiteral(showEvents),
+    eventsQuery: '()',
+    order: 'desc(desc)',
   };
 
   const format = (str, key) => {
@@ -213,7 +224,7 @@ export function getAnodotLink(query, anomalyId, metric, urlBase) {
     return str + a;
   };
 
-  const url = urlBase + '/#!/anomalies?tabs=main;0&activeTab=1&';
+  const url = urlBase + '/#!/anomalies?ref=grafana&tabs=main;0&activeTab=1';
   const link = Object.keys(params).reduce(format, '');
   return url + link;
 }

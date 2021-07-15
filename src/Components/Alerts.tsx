@@ -4,7 +4,7 @@ import { VisOptions } from 'types';
 import { css, cx } from 'emotion';
 import { useTheme } from '@grafana/ui';
 // import { getDataSourceSrv } from '@grafana/runtime';
-import { getAlertsAnodotLink } from '../helpers';
+import { getAlertsAnodotLink, getAnalytics } from '../helpers';
 import isToday from 'date-fns/isToday';
 import { defaultTimeFormat, safeFormat } from '../safeFormat';
 
@@ -75,10 +75,15 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
   //   });
   // }, []);
 
-  const getAlertNode = (alert) => {
+  const getAlertNameCell = (alert) => {
     const postfix = alert.type === 'static' ? ' (Static)' : alert.type === 'noData' ? ' (No Data)' : '';
+    const anomalyInvestigateLink = getAlertsAnodotLink(alert, urlBase);
+    const onAlertClickSegmentClb = getAnalytics({
+      category: 'Alerts: Investigate click',
+      link: anomalyInvestigateLink,
+    });
     return alert.type === 'anomaly' ? (
-      <a target="_blank" rel="noreferrer" href={getAlertsAnodotLink(alert, urlBase)}>
+      <a target="_blank" onClick={onAlertClickSegmentClb} rel="noreferrer" href={anomalyInvestigateLink}>
         {alert.title + postfix}
       </a>
     ) : (
@@ -99,7 +104,7 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
     return (
       <>
         <td className={`severity ${alert.severity}`} />
-        <td className="name">{getAlertNode(alert)}</td>
+        <td className="name">{getAlertNameCell(alert)}</td>
         <td className="started" title={formattedStartDateFull}>
           {formattedStartDateShort}
         </td>

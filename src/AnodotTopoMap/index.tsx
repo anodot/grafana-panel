@@ -7,8 +7,8 @@ import SearchPanel from './Components/SearchPanel';
 import TopologyMapContainer from './Components/TopoChartContainer';
 import { convertAnomaliesToEdges, convertServerDataToTopology } from './helpers';
 import { VisOptions } from 'types';
-
 import './topomap.css';
+import { getAnalytics } from '../helpers';
 
 const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options }) => {
   const [{}, dispatch] = useContext(ReducerContext);
@@ -62,6 +62,7 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
 
       const actions = [{ type: 'setSelectedEdge', selectedEdge: edge }];
       if (edge.hasAnomaly) {
+        getAnalytics({ category: 'Topology: open TimeLine', metrics: query.metrics?.map((m) => m.value) })();
         actions.push({ type: 'setOpenTimeLine', value: true });
         // actions.push({ type: 'setInvestigateAnomalies', value: edge.anomalies })
       }
@@ -77,7 +78,7 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
       });
       uniqueRecordsParams.id = JSON.stringify(uniqueRecordsParams);
     },
-    [dispatch]
+    [dispatch, query.metrics]
   );
 
   const getTimeSeries = useCallback((edge) => {}, []);
