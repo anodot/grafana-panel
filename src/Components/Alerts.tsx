@@ -82,12 +82,12 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
       category: 'Alerts: Investigate click',
       link: anomalyInvestigateLink,
     });
-    return alert.type === 'anomaly' ? (
-      <a target="_blank" onClick={onAlertClickSegmentClb} rel="noreferrer" href={anomalyInvestigateLink}>
+    const alertsConsoleUrl = `${urlBase}/#!/r/alerts-console`;
+    const href = alert.type === 'anomaly' ? anomalyInvestigateLink : alertsConsoleUrl;
+    return (
+      <a target="_blank" onClick={onAlertClickSegmentClb} rel="noreferrer" href={href}>
         {alert.title + postfix}
       </a>
-    ) : (
-      alert.title + postfix
     );
   };
 
@@ -155,28 +155,3 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
 };
 
 export default Alerts;
-// // https://app.anodot.com/#!/anomalies?ref=email
-// &analytics=5000
-// &tabs=main;0
-// &activeTab=1
-// &anomalies=;0(516281fed3594033b1d4d60a64dce03e)
-// &duration=;1(1)
-// &durationScale=;minutes(minutes)
-// &delta=;0(0)
-// &deltaType=;percentage(percentage)
-// &resolution=;medium(medium)
-// &score=;0(0)
-// &state=;both(both)
-// &direction=;both(both)
-// &alertId=;(5ab98e02-ea41-448f-8cfe-86ab48f2c6c5)
-// &sort=;significance(significance)
-// &q=;W10%253D(W10%253D)
-// &constRange=;1h(c)
-// &startDate=;1613943155(0)
-// &endDate=;1613946755(0)
-// &bookmark=;()
-// &anomalyType=;all(all)
-// &correlation=;()
-// &showEvents=;false(false)
-// &eventsQuery=;eyJleHByZXNzaW9uIjpbXX0%253D(eyJleHByZXNzaW9uIjpbXX0%253D)
-// &order=;desc(desc)
