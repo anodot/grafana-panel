@@ -10,6 +10,23 @@ Panels are the building blocks of Grafana. They allow you to visualize data in d
 
 For more information about panels, refer to the documentation on [Panels](https://grafana.com/docs/grafana/latest/features/panels/panels/)
 
+## Installation
+You can get the Anodot Panel Plugin in these ways:
+1. Clone this github repository, build the plugin and deploy it to your grafana deployment.
+2. Unzip zip archive from this repository to your grafana-plugins folder.
+3. Get it from the [Grafana plugins library](https://grafana.com/grafana/plugins/anodot-panel)
+4. Use grafana-cli for installation
+
+## Installing/Updating with grafana-cli
+```
+grafana-cli plugins install anodot-panel
+```
+or
+```
+grafana-cli plugins update anodot-panel
+```
+See more details [here](https://grafana.com/docs/grafana/latest/administration/cli/#plugins-commands).
+
 ## Getting started
 1. Install dependencies
 ```BASH
