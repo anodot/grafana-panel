@@ -55,29 +55,30 @@ const timescaleToDurationScaleMap = {
   '1w': 'weeks',
 };
 
-export function getAlertsAnodotLink(alert, urlBase) {
+export function getInvestigateLink(alert, urlBase) {
   const {
     groupId,
     startTime,
     endTime,
     timeScale,
-    alertConfigurationId, // Alert for the group containing anomaly
-    formatted: { score },
+    // alertConfigurationId, // Alert for the group containing anomaly
+    // formatted: { score },
+    id,
   } = alert;
   const durationScale = timescaleToDurationScaleMap[timeScale];
   const resolution = timescaleToResolutionMap[timeScale];
-  const toLiteral = (value) => `${value}(${value})`;
+  const toLiteral = (value) => `${value || ''}(${value || ''})`;
   const params = {
     anomalies: `0(${groupId})`,
     duration: '1(1)', // should be always 1
-    durationScale: durationScale && toLiteral(durationScale),
+    durationScale: toLiteral(durationScale),
     delta: '0(0)',
     deltaType: 'percentage(percentage)',
-    resolution: resolution && toLiteral(resolution),
-    score: toLiteral(score),
+    resolution: toLiteral(resolution),
+    score: '0(0)', //toLiteral(score),
     state: 'both(both)',
     direction: 'both(both)',
-    alertId: `(${alertConfigurationId})`,
+    alertId: `(${id})`,
     sort: 'significance(significance)',
     q: '()',
     constRange: '1h(c)',

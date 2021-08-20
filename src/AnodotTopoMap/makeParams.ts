@@ -182,19 +182,19 @@ export function getAnodotLink(query, anomalyId, metric, urlBase) {
   const {
     timeScales,
     timeInterval,
-    score,
-    filters,
+    // score,
+    // filters,
     // duration,
     // deltaValue,
     // deltaType,
     // showEvents,
     // sortBy,
     // direction,
-    constRange, // TODO: add from datasource ? E.g: '1w(1w)'
+    //constRange, // TODO: add from datasource ? E.g: '1w(1w)'
   } = query;
 
-  const toLiteral = (value) => `${value}(${value})`;
   // const encodedExpression = encodeURIComponent(b64EncodeUnicode(JSON.stringify(getQ(metric, filters)?.expression)));
+  const toLiteral = value => `${value || ''}(${value || ''})`;
   const params = {
     anomalies: `0(${anomalyId})`,
     duration: '1(1)', // toLiteral(duration),
@@ -202,13 +202,13 @@ export function getAnodotLink(query, anomalyId, metric, urlBase) {
     delta: '0(0)', // toLiteral(deltaValue),
     deltaType: 'percentage(percentage)', //toLiteral(deltaType),
     resolution: toLiteral(timeScales[0]?.meta?.[2]),
-    score: toLiteral(score[0]),
+    score: '0(0)', // toLiteral(score[0]),
     state: 'both(both)',
     direction: 'both(both)', // toLiteral(direction.length === 1 ? direction[0]?.value : 'both'),
     alertId: '()',
     sort: 'significance(significance)', // toLiteral(sortBy),
     q: '()', //toLiteral(encodedExpression),
-    constRange: constRange || '1h(c)', //'1w(1w)',
+    constRange: '1h(c)', //'1w(1w)',
     startDate: `${timeInterval.startDate}(0)`,
     endDate: `${timeInterval.endDate}(0)`,
     bookmark: '()',

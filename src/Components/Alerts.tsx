@@ -4,7 +4,7 @@ import { VisOptions } from 'types';
 import { css, cx } from 'emotion';
 import { useTheme } from '@grafana/ui';
 // import { getDataSourceSrv } from '@grafana/runtime';
-import { getAlertsAnodotLink, getAnalytics } from '../helpers';
+import { getInvestigateLink, getAnalytics } from '../helpers';
 import isToday from 'date-fns/isToday';
 import { defaultTimeFormat, safeFormat } from '../safeFormat';
 
@@ -77,7 +77,7 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
 
   const getAlertNameCell = (alert) => {
     const postfix = alert.type === 'static' ? ' (Static)' : alert.type === 'noData' ? ' (No Data)' : '';
-    const anomalyInvestigateLink = getAlertsAnodotLink(alert, urlBase);
+    const anomalyInvestigateLink = getInvestigateLink(alert, urlBase);
     const onAlertClickSegmentClb = getAnalytics({
       category: 'Alerts: Investigate click',
       link: anomalyInvestigateLink,
