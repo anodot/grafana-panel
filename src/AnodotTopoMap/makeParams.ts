@@ -194,7 +194,7 @@ export function getAnodotLink(query, anomalyId, metric, urlBase) {
   } = query;
 
   // const encodedExpression = encodeURIComponent(b64EncodeUnicode(JSON.stringify(getQ(metric, filters)?.expression)));
-  const toLiteral = value => `${value || ''}(${value || ''})`;
+  const toLiteral = (value) => `${value || ''}(${value || ''})`;
   const params = {
     anomalies: `0(${anomalyId})`,
     duration: '1(1)', // toLiteral(duration),
