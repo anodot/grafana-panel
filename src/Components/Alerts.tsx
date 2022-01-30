@@ -66,15 +66,6 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
     anodotPayload: { alerts, urlBase, testCallback },
   } = serie;
 
-  // useEffect(() => {
-  //   const an = getDataSourceSrv();
-  //   an.get('bc-test-Anodot-28-06').then(dataSource => {
-  //     const me = dataSource.getMe(); //
-  //     console.log('66|Then: ', me, '#');
-  //     me.then(m => console.log('69|Alerts: ', m, '#'));
-  //   });
-  // }, []);
-
   const getAlertNameCell = (alert) => {
     const postfix = alert.type === 'static' ? ' (Static)' : alert.type === 'noData' ? ' (No Data)' : '';
     const anomalyInvestigateLink = getInvestigateLink(alert, urlBase);
@@ -82,7 +73,7 @@ const Alerts: React.FC<VisOptions> = ({ serie, height, options }) => {
       category: 'Alerts: Investigate click',
       link: anomalyInvestigateLink,
     });
-    const alertsConsoleUrl = `${urlBase}/#!/r/alerts-console`;
+    const alertsConsoleUrl = `${urlBase}#!/r/alerts-console`;
     const href = alert.type === 'anomaly' ? anomalyInvestigateLink : alertsConsoleUrl;
     return (
       <a target="_blank" onClick={onAlertClickSegmentClb} rel="noreferrer" href={href}>

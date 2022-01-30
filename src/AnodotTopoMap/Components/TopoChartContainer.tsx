@@ -17,15 +17,10 @@ const ChartContainer = ({ onClickEdge }) => {
       anomalyData,
       selectedEdge,
       selectedNode = {},
-      searchParams = {}, // query
+      searchParams = {},
       subTopologyAnomalyData,
       clusterMetricsData,
       isClusterMetricsLoading,
-      // context = [],
-      // source,
-      // destination,
-      // clusterBy,
-      urlBase,
     },
     dispatch,
   ] = useContext(ReducerContext);

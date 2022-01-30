@@ -4,6 +4,7 @@ import { VisOptions } from 'types';
 import { css, cx } from 'emotion';
 import { formatDuration } from '../AnodotTopoMap/helpers';
 import { useTheme } from '@grafana/ui';
+import { getAnodotLink } from '../AnodotTopoMap/makeParams';
 
 const wrapperStyleClass = css`
   overflow: auto;
@@ -35,11 +36,11 @@ const Secondary = ({ children }) => (
 
 const AnomaliesList: React.FC<VisOptions> = ({ serie, height }) => {
   const theme = useTheme();
+  const { query = {}, urlBase = '' } = serie?.anodotPayload || {};
   const anomaliesDatasets = serie?.anodotPayload?.anomalies?.map((a) => a.dataSet);
   if (!anomaliesDatasets?.length) {
     return <div>No data for anomalies list or chart</div>;
   }
-
   const anomalies = [].concat(...anomaliesDatasets);
 
   return (
@@ -54,8 +55,9 @@ const AnomaliesList: React.FC<VisOptions> = ({ serie, height }) => {
       {anomalies?.map((anomaly) => (
         <a
           key={anomaly.id}
-          // target="_blank"
-          // href={`https://app.anodot.com/#!/anomalies?ref=grafana&tabs=main;0&activeTab=1&alertId=;(${anomaly.id})`}
+          target="_blank"
+          rel="noreferrer"
+          href={getAnodotLink(query, anomaly.id, anomaly.metricName || anomaly.metrics[0].what, urlBase)}
           className={cx(
             anomaliesStyleClass,
             css`
@@ -66,7 +68,7 @@ const AnomaliesList: React.FC<VisOptions> = ({ serie, height }) => {
         >
           <div className="cardContent" key={anomaly.id}>
             <div>
-              <Secondary>Metric name:</Secondary> {anomaly.metricName}
+              <Secondary>Metric name:</Secondary> {anomaly.metricName || anomaly.metrics[0].what}
             </div>
             <div>
               <Secondary>Score:</Secondary> {Math.round(anomaly.score * 100)}

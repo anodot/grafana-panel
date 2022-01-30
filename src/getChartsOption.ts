@@ -191,7 +191,7 @@ export function getChartsOptions({
       {
         value: anomaly[1] * 1000,
         className: 'anomaly-part',
-        color: '#ff8f24',
+        color: '#f7991C',
         anomaly,
       },
       { className: 'neutral-line' },
