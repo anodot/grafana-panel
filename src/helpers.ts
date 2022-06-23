@@ -96,7 +96,7 @@ export function getInvestigateLink(alert, urlBase) {
     return str + a;
   };
 
-  const url = urlBase + '/#!/anomalies?ref=grafana&analytics=5000&tabs=main;0&activeTab=1';
+  const url = urlBase + '#!/anomalies?ref=grafana&analytics=5000&tabs=main;0&activeTab=1';
   const link = Object.keys(params).reduce(format, '');
   return url + link;
 }
@@ -108,5 +108,5 @@ export const getAnalytics = (obj = { category: '' }) => {
     userAgent: window?.navigator?.userAgent,
     ...obj,
   };
-  return () => analytics?.track('grafana', data);
+  return () => data;
 };

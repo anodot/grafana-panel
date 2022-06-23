@@ -75,8 +75,6 @@ export const makeAnomaliesParams = (
   return getQueryParamsUrl(params, '/anomalies');
 };
 export function makeAnomalyTimeSeriesParams(anomaly, url) {
-  const timeSeriesUrl = `${urlBase}/anomalies/5b8b9c2f25e043cda4c685ba531ea42e/metric/what%3Distio_tcp_connections_opened_total.destination_app%3Delasticsearch.destination_canonical_revision%3Dlatest.destination_canonical_service%3Delasticsearch.destination_service%3Delasticsearch-discovery_default_svc_cluster_local.destination_service_name%3Delasticsearch-discovery.destination_service_namespace%3Ddefault.destination_workload%3Delasticsearch-master.destination_workload_namespace%3Ddefault.namespace%3Ddefault.pod_name%3Delasticsearch-master-0.reporter%3Ddestination.request_protocol%3Dtcp.response_flags%3D-.source_app%3Dunknown.source_canonical_revision%3Dlatest.source_canonical_service%3Dunknown.source_workload%3Dunknown.source_workload_namespace%3Dunknown?anomalyId=5b8b9c2f25e043cda4c685ba531ea42e&baseline=true&datapoints=true&endDate=1594291500&metricId=what%3Distio_tcp_connections_opened_total.destination_app%3Delasticsearch.destination_canonical_revision%3Dlatest.destination_canonical_service%3Delasticsearch.destination_service%3Delasticsearch-discovery_default_svc_cluster_local.destination_service_name%3Delasticsearch-discovery.destination_service_namespace%3Ddefault.destination_workload%3Delasticsearch-master.destination_workload_namespace%3Ddefault.namespace%3Ddefault.pod_name%3Delasticsearch-master-0.reporter%3Ddestination.request_protocol%3Dtcp.response_flags%3D-.source_app%3Dunknown.source_canonical_revision%3Dlatest.source_canonical_service%3Dunknown.source_workload%3Dunknown.source_workload_namespace%3Dunknown&resolution=medium&startBucketMode=false&startDate=1594093200`;
-
   const { resolution, startDate, endDate, id, metricName, metrics = [] } = anomaly;
   const metricId = metrics[0]?.properties.reduce((res, p) => `${res}.${p.key}=${p.value}`, `what=${metricName}`);
   const anomalyDuration = endDate - startDate;
@@ -224,7 +222,7 @@ export function getAnodotLink(query, anomalyId, metric, urlBase) {
     return str + a;
   };
 
-  const url = urlBase + '/#!/anomalies?ref=grafana&tabs=main;0&activeTab=1';
+  const url = urlBase + '#!/anomalies?ref=grafana&tabs=main;0&activeTab=1';
   const link = Object.keys(params).reduce(format, '');
   return url + link;
 }

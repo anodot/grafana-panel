@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { ReducerContext, ReducerContextProvider } from './reducer_context';
 import { uniqBy } from 'lodash';
 import { css } from 'emotion';
@@ -10,7 +10,7 @@ import { VisOptions } from 'types';
 import './topomap.css';
 import { getAnalytics } from '../helpers';
 
-const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options }) => {
+const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options, replaceVariables }) => {
   const [{}, dispatch] = useContext(ReducerContext);
   const {
     metrics = [],
@@ -21,7 +21,11 @@ const TopoMapContainer: React.FC<VisOptions> = ({ width, height, serie, options 
     propertiesOptions,
     events,
   } = serie?.anodotPayload || {};
-  const { source, destination, context } = query;
+  const sourceDashboardVar = replaceVariables('$topology_source');
+  const destinationDashboardVar = replaceVariables('$topology_destination');
+  const { context } = query;
+  const source = query.source || sourceDashboardVar;
+  const destination = query.destination || destinationDashboardVar;
 
   useEffect(() => {
     /* Just store dataSource params in the Panel's state reducer */

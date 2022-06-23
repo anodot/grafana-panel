@@ -17,7 +17,7 @@ import './common.css';
 interface Props extends PanelProps<PanelOptions> {}
 
 export const Panel: React.FC<Props> = (props) => {
-  const { width, height, data, options } = props;
+  const { width, height, data, options, ...restPanelProps } = props;
   const styles = getStyles();
   const theme = useTheme();
   const isLoading = props?.data.state === 'Loading';
@@ -38,6 +38,7 @@ export const Panel: React.FC<Props> = (props) => {
     width,
     height,
     options,
+    ...restPanelProps,
   };
   return (
     <div

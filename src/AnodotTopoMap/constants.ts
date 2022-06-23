@@ -1,4 +1,3 @@
-// export const urlBase = (process.env.REACT_APP_ANODOT_API_URL || 'https://feature-topology-map.ano-dev.com') + '/api/v1';
 export const urlBase = (process.env.REACT_APP_ANODOT_API_URL || 'https://app.anodot.com') + '/api/v1';
 export const timeFormat = 'MM/DD/YYYY h:mm a';
 export const splitSign = '] + [';
