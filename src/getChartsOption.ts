@@ -17,6 +17,8 @@ export function getChartsOptions({
   width,
   height = 200,
   timeFormat,
+  tooltipFormat,
+  dimensions
 }) {
   const config = {
     title: {
@@ -72,10 +74,20 @@ export function getChartsOptions({
           y,
           x,
         } = this.point;
+
+        const tooltipExtras = tooltipFormat.split(",").map(p => p.trim()).filter(p => p.length);
+        const { what, properties = [] } = series?.userOptions?.dimensions || {}
+        const dimensionsMap = {what};
+        properties.forEach(({key, value}) => {dimensionsMap[key] = value});
+        const extraRows = tooltipExtras.reduce((res, cur) => {
+          if (dimensionsMap[cur]) {
+            res.push(`<div><span>${cur}:</span> ${dimensionsMap[cur]}</div>`)
+          }
+          return res;
+        }, [])
         if ((isMulti && series.name.includes('line')) || series.name === 'line') {
           const anomalyRows =
-            anomaly &&
-            `
+            anomaly &&            `
                 <div class="anomaly-rows">
                     <div><span>Score:</span> ${Math.round(anomaly[3] * 100)}</div>
                     <div><span>Value:</span> ${Math.round(anomaly[5])}</div>
@@ -90,6 +102,7 @@ export function getChartsOptions({
                 <div class="bage-wrapper ${anomaly ? '' : 'metrics'}">
                     <div class="bage" style="background: ${color}"><b>${Math.round(y)}</b></div>
                 </div>
+                ${extraRows.length > 0 ? `<div class="dimensions-rows">${extraRows.join("")}</div>` : ""}
                 ${anomalyRows || ''}
             </div>
           `;
@@ -149,6 +162,7 @@ export function getChartsOptions({
     });
   }
   if (lineData) {
+    console.log(lineData);
     config.series.push({
       type: 'line',
       zIndex: 1,
@@ -156,6 +170,7 @@ export function getChartsOptions({
       className: 'anodot-line',
       name: 'line',
       color: '#2671ff',
+      dimensions,
       marker: {
         symbol: 'circle',
         enabled: false,
@@ -167,10 +182,12 @@ export function getChartsOptions({
     if (chartClassNames) {
       config.chart.className = chartClassNames;
     }
+
     multilinesData.forEach((d, i) => {
       config.series.push({
         type: 'line',
         color: d.color,
+        dimensions: d.dimensions,
         zIndex: 1,
         data: d,
         className: 'anodot-line',

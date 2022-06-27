@@ -78,9 +78,26 @@
   text-align: center;
 }
 
+.anodot-chart-tooltip .anomaly-rows {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
 .anodot-chart-tooltip .anomaly-rows span {
   opacity: 0.7;
+}
+
+.anodot-chart-tooltip .dimensions-rows {
   margin-bottom: 4px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.anodot-chart-tooltip .dimensions-rows span{
+  opacity: 0.7;
 }
 
 .alignCenter {

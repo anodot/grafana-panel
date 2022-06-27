@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, {useMemo} from 'react';
 import { VisOptions } from 'types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -58,6 +58,16 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
       return m;
     });
   }
+
+  const multilineChartOptions = useMemo(() => showMultiline ? getMultipleOptions(metrics, {
+    chartClassNames: isDark ? 'isDark' : '',
+    isDark,
+    isMulti: true,
+    timeInterval,
+    timeFormat: options.timeFormat,
+    tooltipFormat: options.tooltipFormat
+  }) : {}, [isDark, timeInterval, options, showMultiline, metrics]);
+
   return (
     <div
       className={cx(
@@ -80,7 +90,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
 
       {!showMultiline &&
         metrics.map(
-          ({ baseline = [], dataPoints = [], tags = [], properties = [], meta, origin }) =>
+          ({ baseline = [], dataPoints = [], tags = [], properties = [], origin, what }) =>
             dataPoints.length > 0 && (
               <div
                 key={meta.metricName}
@@ -99,6 +109,8 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
                     isDark,
                     timeInterval,
                     timeFormat: options.timeFormat,
+                    tooltipFormat: options.tooltipFormat,
+                    dimensions: { properties, what}
                   })}
                 />
               </div>
@@ -108,13 +120,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
         <div>
           <HighchartsReact
             highcharts={Highcharts}
-            options={getMultipleOptions(metrics, {
-              chartClassNames: isDark ? 'isDark' : '',
-              isDark,
-              isMulti: true,
-              timeInterval,
-              timeFormat: options.timeFormat,
-            })}
+            options={multilineChartOptions}
           />
           <div>
             {metrics.map(({ tags = [], properties = [], meta, color }, i) => (
@@ -134,9 +140,10 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
 };
 
 const getMultipleOptions = (metrics, otherOptions = {}) => {
-  const multilinesData = metrics.map(({ dataPoints, color }) => {
+  const multilinesData = metrics.map(({ dataPoints, color, properties, what }) => {
     const d = multiplyX(dataPoints);
     d.color = color;
+    d.dimensions = { properties, what }
     return d;
   });
 
