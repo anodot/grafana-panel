@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import { VisOptions } from 'types';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -21,21 +21,11 @@ const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width, options: 
   return (
     <div style={{ height: height, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
       {anomalies.map(
-        ({ baseline, dataPoints = [], tags = [], anomalies, otherAnomalyIntervals, properties, what, metricsCount }, i) => {
-          const options = useMemo(() => getChartsOptions({
-            areaData: multiplyX(baseline),
-            lineData: multiplyX(dataPoints),
-            anomaly: anomalies[0],
-            otherAnomalies: otherAnomalyIntervals,
-            chartClassNames: isDark ? 'isDark' : '',
-            timeInterval,
-            isDark,
-            width,
-            timeFormat,
-            tooltipFormat,
-            dimensions: { properties, what}
-          }), [baseline, dataPoints, anomalies,otherAnomalyIntervals, isDark, timeInterval, width, timeFormat, tooltipFormat, properties, what])
-          return dataPoints.length > 0 && (
+        (
+          { baseline, dataPoints = [], tags = [], anomalies, otherAnomalyIntervals, properties, what, metricsCount },
+          i
+        ) =>
+          dataPoints.length > 0 && (
             <div key={i} style={{ marginTop: 30 }}>
               <SummaryHeader
                 properties={properties}
@@ -49,11 +39,22 @@ const AnomaliesCharts: React.FC<VisOptions> = ({ serie, height, width, options: 
               />
               <HighchartsReact
                 highcharts={Highcharts}
-                options={options}
+                options={getChartsOptions({
+                  areaData: multiplyX(baseline),
+                  lineData: multiplyX(dataPoints),
+                  anomaly: anomalies[0],
+                  otherAnomalies: otherAnomalyIntervals,
+                  chartClassNames: isDark ? 'isDark' : '',
+                  timeInterval,
+                  isDark,
+                  width,
+                  timeFormat,
+                  tooltipFormat,
+                  dimensions: { properties, what },
+                })}
               />
             </div>
           )
-        }
       )}
     </div>
   );

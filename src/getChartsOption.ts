@@ -18,7 +18,7 @@ export function getChartsOptions({
   height = 200,
   timeFormat,
   tooltipFormat,
-  dimensions
+  dimensions,
 }) {
   const config = {
     title: {
@@ -75,19 +75,25 @@ export function getChartsOptions({
           x,
         } = this.point;
 
-        const tooltipExtras = tooltipFormat.split(",").map(p => p.trim()).filter(p => p.length);
-        const { what, properties = [] } = series?.userOptions?.dimensions || {}
-        const dimensionsMap = {what};
-        properties.forEach(({key, value}) => {dimensionsMap[key] = value});
+        const tooltipExtras = tooltipFormat
+          .split(',')
+          .map((p) => p.trim())
+          .filter((p) => p.length);
+        const { what, properties = [] } = series?.userOptions?.dimensions || {};
+        const dimensionsMap = { what };
+        properties.forEach(({ key, value }) => {
+          dimensionsMap[key] = value;
+        });
         const extraRows = tooltipExtras.reduce((res, cur) => {
           if (dimensionsMap[cur]) {
-            res.push(`<div><span>${cur}:</span> ${dimensionsMap[cur]}</div>`)
+            res.push(`<div><span>${cur}:</span> ${dimensionsMap[cur]}</div>`);
           }
           return res;
-        }, [])
+        }, []);
         if ((isMulti && series.name.includes('line')) || series.name === 'line') {
           const anomalyRows =
-            anomaly &&            `
+            anomaly &&
+            `
                 <div class="anomaly-rows">
                     <div><span>Score:</span> ${Math.round(anomaly[3] * 100)}</div>
                     <div><span>Value:</span> ${Math.round(anomaly[5])}</div>
@@ -100,9 +106,9 @@ export function getChartsOptions({
             <div class="anodot-chart-tooltip">
                 <div class="timestamp">${timeStr}</div>
                 <div class="bage-wrapper ${anomaly ? '' : 'metrics'}">
-                    <div class="bage" style="background: ${color}"><b>${Math.round(y)}</b></div>
+                    <div class="bage" style="background: ${color}"><b>${Math.round(y * 100) / 100}</b></div>
                 </div>
-                ${extraRows.length > 0 ? `<div class="dimensions-rows">${extraRows.join("")}</div>` : ""}
+                ${extraRows.length > 0 ? `<div class="dimensions-rows">${extraRows.join('')}</div>` : ''}
                 ${anomalyRows || ''}
             </div>
           `;

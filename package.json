@@ -28,6 +28,6 @@
     "react-virtualized": "^9.22.2"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=16"
   }
 }

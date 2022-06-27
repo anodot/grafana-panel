@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import { VisOptions } from 'types';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -49,6 +49,21 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
   let metrics = metricsComposite;
   const lengthsCheck = metrics?.reduce((sum, { dataPoints }) => sum + dataPoints.length, 0);
 
+  const multilineChartOptions = useMemo(
+    () =>
+      showMultiline
+        ? getMultipleOptions(metrics, {
+            chartClassNames: isDark ? 'isDark' : '',
+            isDark,
+            isMulti: true,
+            timeInterval,
+            timeFormat: options.timeFormat,
+            tooltipFormat: options.tooltipFormat,
+          })
+        : {},
+    [isDark, timeInterval, options, showMultiline, metrics]
+  );
+
   if (!metrics || metrics.length === 0 || lengthsCheck < 2) {
     return <div>No data for Metrics Composite charts</div>;
   }
@@ -58,15 +73,6 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
       return m;
     });
   }
-
-  const multilineChartOptions = useMemo(() => showMultiline ? getMultipleOptions(metrics, {
-    chartClassNames: isDark ? 'isDark' : '',
-    isDark,
-    isMulti: true,
-    timeInterval,
-    timeFormat: options.timeFormat,
-    tooltipFormat: options.tooltipFormat
-  }) : {}, [isDark, timeInterval, options, showMultiline, metrics]);
 
   return (
     <div
@@ -110,7 +116,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
                     timeInterval,
                     timeFormat: options.timeFormat,
                     tooltipFormat: options.tooltipFormat,
-                    dimensions: { properties, what}
+                    dimensions: { properties, what },
                   })}
                 />
               </div>
@@ -118,10 +124,7 @@ const CompositeMetricsCharts: React.FC<VisOptions> = ({ serie, height, width, op
         )}
       {showMultiline && (
         <div>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={multilineChartOptions}
-          />
+          <HighchartsReact highcharts={Highcharts} options={multilineChartOptions} />
           <div>
             {metrics.map(({ tags = [], properties = [], meta, color }, i) => (
               <SummaryHeader
@@ -143,7 +146,7 @@ const getMultipleOptions = (metrics, otherOptions = {}) => {
   const multilinesData = metrics.map(({ dataPoints, color, properties, what }) => {
     const d = multiplyX(dataPoints);
     d.color = color;
-    d.dimensions = { properties, what }
+    d.dimensions = { properties, what };
     return d;
   });
 
