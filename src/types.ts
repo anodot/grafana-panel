@@ -1,5 +1,6 @@
 export interface PanelOptions {
   timeFormat?: string;
+  tooltip?: string[];
 }
 
 export interface VisOptions {
