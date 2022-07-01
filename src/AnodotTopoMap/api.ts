@@ -163,39 +163,3 @@ export async function makeRequest(url, payload = null, loginCallback) {
       console.error('Request ERROR: ', url, error);
     });
 }
-
-export function login(clb) {
-  // localStorage.setItem(tokenKey, currentToken);
-  //  const answer = prompt('Login/password', 'your.email@anodot.com/******')
-  //  if (!answer) {
-  //      alert('Reload the page and enter your login/password');
-  //      return
-  //  }
-  //  const [email, password] = answer.split('/');
-  const [email, password] = ['yuval+istio@anodot.com', '123Qweasd']; // TODO: never commit it
-  const url = `${urlBaseHardcoded}/signin`;
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  };
-
-  return fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.token) {
-        localStorage.setItem(tokenKey, data.token);
-        clb && clb(true);
-      } else {
-        alert('Reload the page and enter your login/password');
-        clb && clb(false);
-        return login();
-      }
-    })
-    .catch((error) => {
-      alert('Reload the page and enter your login/password');
-      clb && clb(true);
-    });
-}
